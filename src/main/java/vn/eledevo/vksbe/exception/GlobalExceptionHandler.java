@@ -1,6 +1,7 @@
 package vn.eledevo.vksbe.exception;
 
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
 import static vn.eledevo.vksbe.constant.ErrorCode.FIELD_INVALID;
 import static vn.eledevo.vksbe.constant.ErrorCode.METHOD_ERROR;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import jakarta.validation.ConstraintViolationException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import lombok.extern.slf4j.Slf4j;
 import vn.eledevo.vksbe.constant.ErrorCode;
 import vn.eledevo.vksbe.dto.response.ApiResponse;
+
+import javax.security.auth.login.AccountLockedException;
 
 @RestControllerAdvice
 @Slf4j

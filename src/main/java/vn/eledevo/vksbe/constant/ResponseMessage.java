@@ -19,4 +19,6 @@ public class ResponseMessage {
     public static final String DEVICE_INFO_UUID_BLANK = "Mã UUID thiết bị không được để trống";
 
     public static final String USER_IDENTIFICATION_NUMBER_INVALID = "Số CMND/CCCD không hợp lệ hoặc đã tồn tại";
+
+    public static final String ACCOUNT_LOCKED = "Tài khoản của bạn đã bị khóa!";
 }

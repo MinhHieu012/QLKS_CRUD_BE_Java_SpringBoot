@@ -6,10 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.ResponseMessage;
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
+import vn.eledevo.vksbe.exception.UserAccountLockedException;
 
 import static vn.eledevo.vksbe.constant.ResponseMessage.USER_IDENTIFICATION_NUMBER_INVALID;
 
@@ -106,7 +105,15 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        if (UserStatus.LOCKED.equals(status)) {
+            try {
+                throw new UserAccountLockedException("Your account has been locked!");
+            } catch (UserAccountLockedException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return true;
+        }
     }
 
     @Override
