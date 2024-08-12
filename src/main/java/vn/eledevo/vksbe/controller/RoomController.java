@@ -1,5 +1,6 @@
 package vn.eledevo.vksbe.controller;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +38,26 @@ public class RoomController {
 
     @PutMapping("/roomstatus/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse updateRoomStatus(@PathVariable Integer id, @RequestParam String status) throws ValidationException {
+    public ApiResponse updateRoomStatus(@PathVariable Integer id, @RequestParam String status)
+            throws ValidationException {
         return new ApiResponse<>(204, "Update room status success!", service.updateRoomStatus(id, status));
+    }
+
+    @GetMapping("/filter")
+    public ApiResponse sortAndPagingAndSearch(
+            @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "2") int limit,
+            @RequestParam(value = "orderedColumn", defaultValue = "name") String orderedColumn,
+            @Nullable @RequestParam("name") String name,
+            @Nullable @RequestParam("roomNumber") String roomNumber,
+            @Nullable @RequestParam("floor") String floor,
+            @Nullable @RequestParam("roomTypeId") Long roomTypeId,
+            @Nullable @RequestParam("status") String status) {
+        return new ApiResponse<>(
+                200,
+                "Filter room success!",
+                service.sortAndPagingAndSearch(
+                        orderBy, page, limit, orderedColumn, name, roomNumber, floor, roomTypeId, status));
     }
 }
