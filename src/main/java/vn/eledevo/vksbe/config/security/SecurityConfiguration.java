@@ -41,7 +41,10 @@ public class SecurityConfiguration {
         "admin/quanlyuser/filter**",
         "/admin/quanlykieuphong",
         "/admin/quanlykieuphong/search**",
-        "/admin/quanlykieuphong/filter**"
+        "/admin/quanlykieuphong/filter**",
+        "admin/quanlyphong",
+        "admin/quanlyphong/search**",
+        "admin/quanlyphong/filter**"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -53,17 +56,19 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URL)
                         .permitAll()
-                        .requestMatchers("/api/v1/private/**", "/api/v1/public/**").hasAnyRole(ADMIN.name())
-
+                        .requestMatchers("/api/v1/private/**", "/api/v1/public/**")
+                        .hasAnyRole(ADMIN.name())
                         .requestMatchers(
                                 "/admin/quanlyuser/add",
                                 "/admin/quanlyuser/update/**",
                                 "/admin/quanlyuser/delete/**",
                                 "/admin/quanlykieuphong/add",
                                 "/admin/quanlykieuphong/update/**",
-                                "/admin/quanlykieuphong/delete/**"
-                        ).hasRole(ADMIN.name())
-
+                                "/admin/quanlykieuphong/delete/**",
+                                "/admin/quanlyphong/add",
+                                "/admin/quanlyphong/update/**",
+                                "/admin/quanlyphong/lock/**")
+                        .hasRole(ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

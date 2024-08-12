@@ -23,7 +23,6 @@ import vn.eledevo.vksbe.dto.request.login_register.RegisterRequest;
 import vn.eledevo.vksbe.dto.response.AuthenticationResponse;
 import vn.eledevo.vksbe.entity.Token;
 import vn.eledevo.vksbe.entity.User;
-import vn.eledevo.vksbe.exception.UserAccountLockedException;
 import vn.eledevo.vksbe.repository.TokenRepository;
 import vn.eledevo.vksbe.repository.UserRepository;
 

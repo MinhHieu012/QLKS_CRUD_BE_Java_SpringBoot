@@ -1,5 +1,7 @@
 package vn.eledevo.vksbe.entity;
 
+import static vn.eledevo.vksbe.constant.ResponseMessage.USER_IDENTIFICATION_NUMBER_INVALID;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
@@ -7,19 +9,16 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.Pattern;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.eledevo.vksbe.constant.ResponseMessage;
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.exception.UserAccountLockedException;
-
-import static vn.eledevo.vksbe.constant.ResponseMessage.USER_IDENTIFICATION_NUMBER_INVALID;
 
 @Entity
 @Getter
@@ -85,6 +84,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<RoomType> RoomTypes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Room> Room;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,13 +1,14 @@
 package vn.eledevo.vksbe.dto.request.user;
 
+import java.util.Date;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.ResponseMessage;
-
-import java.util.Date;
 
 @Setter
 @Getter

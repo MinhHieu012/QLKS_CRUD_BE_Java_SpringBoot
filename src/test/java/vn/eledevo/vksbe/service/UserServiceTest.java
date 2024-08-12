@@ -1,7 +1,6 @@
 package vn.eledevo.vksbe.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -17,7 +16,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.test.context.support.WithUserDetails;
 
 import vn.eledevo.vksbe.constant.ResponseMessage;
 import vn.eledevo.vksbe.constant.Role;
@@ -64,16 +62,17 @@ public class UserServiceTest {
         }
     }
 
-//    @Test
-//    @WithUserDetails(value = "john", userDetailsServiceBeanName = "testUserDetailsService")
-//    // Kiểm tra Id, Username trả về khi tạo tài khoản
-//    void createUser_validRequest_success() throws Exception {
-//        when(userRepository.existsByUsername(anyString())).thenReturn(false);
-//        when(userRepository.save(any())).thenReturn(user);
-//        var response = userService.createUser(userRequest);
-//        Assertions.assertThat(response.getId()).isEqualTo(UUID.fromString("88100e6d-99fe-44cd-aa44-1d2aa5c04d52"));
-//        Assertions.assertThat(response.getUsername()).isEqualTo("long");
-//    }
+    //    @Test
+    //    @WithUserDetails(value = "john", userDetailsServiceBeanName = "testUserDetailsService")
+    //    // Kiểm tra Id, Username trả về khi tạo tài khoản
+    //    void createUser_validRequest_success() throws Exception {
+    //        when(userRepository.existsByUsername(anyString())).thenReturn(false);
+    //        when(userRepository.save(any())).thenReturn(user);
+    //        var response = userService.createUser(userRequest);
+    //
+    // Assertions.assertThat(response.getId()).isEqualTo(UUID.fromString("88100e6d-99fe-44cd-aa44-1d2aa5c04d52"));
+    //        Assertions.assertThat(response.getUsername()).isEqualTo("long");
+    //    }
 
     @Test
     // Kiểm tra username có tồn tại khi tạo tài khoản

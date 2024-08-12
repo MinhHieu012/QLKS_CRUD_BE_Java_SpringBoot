@@ -1,12 +1,7 @@
-package vn.eledevo.vksbe.dto.response;
+package vn.eledevo.vksbe.dto.response.roomtype;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.eledevo.vksbe.constant.Role;
-import vn.eledevo.vksbe.constant.UserStatus;
-
-import java.util.Date;
-import java.util.UUID;
 
 @Getter
 @Setter

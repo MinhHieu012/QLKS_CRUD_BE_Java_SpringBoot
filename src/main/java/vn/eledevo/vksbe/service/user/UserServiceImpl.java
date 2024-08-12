@@ -1,5 +1,11 @@
 package vn.eledevo.vksbe.service.user;
 
+import static vn.eledevo.vksbe.constant.ResponseMessage.*;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,18 +18,12 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
 import vn.eledevo.vksbe.dto.request.user.UserUpdateRequest;
-import vn.eledevo.vksbe.dto.response.UserResponse;
+import vn.eledevo.vksbe.dto.response.user.UserResponse;
 import vn.eledevo.vksbe.entity.User;
 import vn.eledevo.vksbe.exception.ValidationException;
 import vn.eledevo.vksbe.mapper.UserMapper;
 import vn.eledevo.vksbe.repository.UserRepository;
 import vn.eledevo.vksbe.utils.SecurityUtils;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static vn.eledevo.vksbe.constant.ResponseMessage.*;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -39,10 +39,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> getAllUser() {
         List<User> userList = userRepository.findAll();
-        List<UserResponse> userResponse = userList
-                .stream()
-                .map(mapper::toResponse)
-                .collect(Collectors.toList());
+        List<UserResponse> userResponse =
+                userList.stream().map(mapper::toResponse).collect(Collectors.toList());
         return userResponse;
     }
 
@@ -79,7 +77,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateUser(UUID uuid, UserUpdateRequest userRequest) throws ValidationException {
 
-        User user = userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
+        User user =
+                userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
 
         if (userRepository.existsByUsername(userRequest.getUsername())) {
             throw new ValidationException("Username", USER_EXIST);
@@ -106,7 +105,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse lockUser(UUID uuid) throws ValidationException {
-        User user = userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
+        User user =
+                userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
         user.setStatus(UserStatus.LOCKED);
         User userLockResult = userRepository.save(user);
         return mapper.toResponse(userLockResult);
@@ -114,7 +114,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse unLockUser(UUID uuid) throws ValidationException {
-        User user = userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
+        User user =
+                userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
         user.setStatus(UserStatus.ACTIVE);
         User userUnlockResult = userRepository.save(user);
         return mapper.toResponse(userUnlockResult);
@@ -123,28 +124,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> searchUser(String username, String phone, String identificationNumber) {
         List<User> listUserFromDB = userRepository.searchUsers(username, phone, identificationNumber);
-        List<UserResponse> listUserSearched = listUserFromDB
-                .stream()
-                .map(mapper::toResponse)
-                .collect(Collectors.toList());
+        List<UserResponse> listUserSearched =
+                listUserFromDB.stream().map(mapper::toResponse).collect(Collectors.toList());
         return listUserSearched;
     }
 
     @Override
-    public List<UserResponse> sortAndPagingAndSearch (
-            String orderBy, int page, int limit, String orderedColumn,
-            String name, String phone, String identificationNumber)
-    {
-        Pageable userPageable = PageRequest.of (
-                page - 1, limit,
-                Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
+    public List<UserResponse> sortAndPagingAndSearch(
+            String orderBy,
+            int page,
+            int limit,
+            String orderedColumn,
+            String name,
+            String phone,
+            String identificationNumber) {
+        Pageable userPageable =
+                PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
-        List<User> userList = userRepository.listUserSearchedAndPagingFromDB(name, phone, identificationNumber, userPageable);
+        List<User> userList =
+                userRepository.listUserSearchedAndPagingFromDB(name, phone, identificationNumber, userPageable);
 
-        List<UserResponse> listSortAndPagingAndSearch = userList
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+        List<UserResponse> listSortAndPagingAndSearch =
+                userList.stream().map(mapper::toResponse).toList();
         return listSortAndPagingAndSearch;
     }
 }

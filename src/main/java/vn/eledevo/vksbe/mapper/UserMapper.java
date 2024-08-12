@@ -2,9 +2,8 @@ package vn.eledevo.vksbe.mapper;
 
 import org.mapstruct.Mapper;
 
-import org.springframework.data.repository.CrudRepository;
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
-import vn.eledevo.vksbe.dto.response.UserResponse;
+import vn.eledevo.vksbe.dto.response.user.UserResponse;
 import vn.eledevo.vksbe.entity.User;
 
 @Mapper(componentModel = "spring")

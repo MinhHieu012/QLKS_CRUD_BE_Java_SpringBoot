@@ -14,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.dto.request.login_register.AuthenticationRequest;
 import vn.eledevo.vksbe.dto.request.login_register.RegisterRequest;
 import vn.eledevo.vksbe.dto.response.AuthenticationResponse;
-import vn.eledevo.vksbe.exception.UserAccountLockedException;
 import vn.eledevo.vksbe.service.authenticate.AuthenticationService;
 import vn.eledevo.vksbe.service.user.UserService;
 

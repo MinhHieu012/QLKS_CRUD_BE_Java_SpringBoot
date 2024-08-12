@@ -5,34 +5,43 @@ import jakarta.validation.constraints.Pattern;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.eledevo.vksbe.constant.RoomStatus;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "roomtype")
+@Table(name = "room")
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoomType {
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "room_type_id")
-    Long id;
+    Integer id;
 
-    @Column(unique = true)
     String name;
 
     @Pattern(regexp = "[0-9]*$", message = "Trường này chỉ nhận giá trị số!")
-    @Column(name = "max_people")
-    String maxPeople;
+    @Column(name = "room_number")
+    String roomNumber;
+
+    @Pattern(regexp = "[0-9]*$", message = "Trường này chỉ nhận giá trị số!")
+    String floor;
+
+    @Pattern(regexp = "[0-9]*$", message = "Trường này chỉ nhận giá trị số!")
+    String price;
 
     String description;
+
+    @Enumerated(EnumType.STRING)
+    RoomStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
 
-    @OneToOne(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
-    Room room;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_type_id")
+    RoomType roomType;
 }

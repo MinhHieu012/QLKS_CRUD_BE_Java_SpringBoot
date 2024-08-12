@@ -1,7 +1,6 @@
-package vn.eledevo.vksbe.dto.response;
+package vn.eledevo.vksbe.dto.response.user;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import lombok.*;

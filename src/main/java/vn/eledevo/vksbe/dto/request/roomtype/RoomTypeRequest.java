@@ -1,9 +1,9 @@
 package vn.eledevo.vksbe.dto.request.roomtype;
 
 import jakarta.validation.constraints.Pattern;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.eledevo.vksbe.entity.User;
 
 @Setter
 @Getter
@@ -12,7 +12,9 @@ import vn.eledevo.vksbe.entity.User;
 @Builder
 public class RoomTypeRequest {
     String name;
+
     @Pattern(regexp = "[0-9]*$", message = "Trường này chỉ nhận giá trị số!")
     String maxPeople;
+
     String description;
 }
