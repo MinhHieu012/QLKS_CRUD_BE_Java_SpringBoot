@@ -1,5 +1,6 @@
 package vn.eledevo.vksbe.controller;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,5 +50,35 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse unLockUser(@PathVariable UUID uuid) throws ValidationException {
         return new ApiResponse<>(200, "Unlock user success!", userService.unLockUser(uuid));
+    }
+
+    @GetMapping("/search")
+    public ApiResponse searchUser(
+            @RequestParam("username") String username,
+            @RequestParam("phone") String phone,
+            @RequestParam("identificationNumber") String identificationNumber
+    ) {
+        return new ApiResponse<>(200, "Search user success!", userService.searchUser(username, phone, identificationNumber));
+    }
+
+    @GetMapping("/filter")
+    public ApiResponse sortAndPagingAndSearch(
+            @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "2") int limit,
+            @RequestParam(value = "orderedColumn", defaultValue = "username") String orderedColumn,
+
+            @Nullable
+            @RequestParam("username") String username,
+
+            @Nullable
+            @RequestParam("phone") String phone,
+
+            @Nullable
+            @RequestParam("identificationNumber") String identificationNumber
+    ) {
+        return new ApiResponse<>(200, "Success!", userService.sortAndPagingAndSearch(
+                orderBy, page, limit, orderedColumn, username, phone, identificationNumber)
+        );
     }
 }

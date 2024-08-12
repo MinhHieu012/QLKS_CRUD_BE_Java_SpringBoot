@@ -1,5 +1,8 @@
 package vn.eledevo.vksbe.service.user;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
 import vn.eledevo.vksbe.dto.request.user.UserUpdateRequest;
-import vn.eledevo.vksbe.dto.response.ApiResponse;
 import vn.eledevo.vksbe.dto.response.UserResponse;
 import vn.eledevo.vksbe.entity.User;
 import vn.eledevo.vksbe.exception.ValidationException;
@@ -116,5 +118,33 @@ public class UserServiceImpl implements UserService {
         user.setStatus(UserStatus.ACTIVE);
         User userUnlockResult = userRepository.save(user);
         return mapper.toResponse(userUnlockResult);
+    }
+
+    @Override
+    public List<UserResponse> searchUser(String username, String phone, String identificationNumber) {
+        List<User> listUserFromDB = userRepository.searchUsers(username, phone, identificationNumber);
+        List<UserResponse> listUserSearched = listUserFromDB
+                .stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
+        return listUserSearched;
+    }
+
+    @Override
+    public List<UserResponse> sortAndPagingAndSearch (
+            String orderBy, int page, int limit, String orderedColumn,
+            String name, String phone, String identificationNumber)
+    {
+        Pageable userPageable = PageRequest.of (
+                page - 1, limit,
+                Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
+
+        List<User> userList = userRepository.listUserSearchedAndPagingFromDB(name, phone, identificationNumber, userPageable);
+
+        List<UserResponse> listSortAndPagingAndSearch = userList
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+        return listSortAndPagingAndSearch;
     }
 }

@@ -37,7 +37,11 @@ public class SecurityConfiguration {
         "/webjars/**",
         "/swagger-ui.html",
         "/admin/quanlyuser",
-        "admin/quanlyuser/search?**",
+        "admin/quanlyuser/search**",
+        "admin/quanlyuser/filter**",
+        "/admin/quanlykieuphong",
+        "/admin/quanlykieuphong/search**",
+        "/admin/quanlykieuphong/filter**"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -54,7 +58,10 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/admin/quanlyuser/add",
                                 "/admin/quanlyuser/update/**",
-                                "/admin/quanlyuser/delete/**"
+                                "/admin/quanlyuser/delete/**",
+                                "/admin/quanlykieuphong/add",
+                                "/admin/quanlykieuphong/update/**",
+                                "/admin/quanlykieuphong/delete/**"
                         ).hasRole(ADMIN.name())
 
                         .anyRequest()

@@ -83,6 +83,9 @@ public class User implements UserDetails {
     // Liên kết với Entity Token
     List<Token> Tokens;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<RoomType> RoomTypes;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();

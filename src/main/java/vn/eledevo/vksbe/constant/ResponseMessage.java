@@ -21,4 +21,6 @@ public class ResponseMessage {
     public static final String USER_IDENTIFICATION_NUMBER_INVALID = "Số CMND/CCCD không hợp lệ hoặc đã tồn tại";
 
     public static final String ACCOUNT_LOCKED = "Tài khoản của bạn đã bị khóa!";
+
+    public static final String ROOM_TYPE_EXISTED = "Đã có loại phòng này!";
 }
