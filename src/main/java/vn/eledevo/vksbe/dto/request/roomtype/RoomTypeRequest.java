@@ -3,6 +3,7 @@ package vn.eledevo.vksbe.dto.request.roomtype;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.eledevo.vksbe.entity.User;
 
 @Setter
 @Getter
