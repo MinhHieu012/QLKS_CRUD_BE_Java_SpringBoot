@@ -44,7 +44,10 @@ public class SecurityConfiguration {
         "/admin/quanlykieuphong/filter**",
         "admin/quanlyphong",
         "admin/quanlyphong/search**",
-        "admin/quanlyphong/filter**"
+        "admin/quanlyphong/filter**",
+        "admin/quanlydatphong",
+        "admin/quanlydatphong/search**",
+        "admin/quanlydatphong/filter**"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -67,7 +70,10 @@ public class SecurityConfiguration {
                                 "/admin/quanlykieuphong/delete/**",
                                 "/admin/quanlyphong/add",
                                 "/admin/quanlyphong/update/**",
-                                "/admin/quanlyphong/lock/**")
+                                "/admin/quanlyphong/lock/**",
+                                "/admin/quanlydatphong/add",
+                                "/admin/quanlydatphong/update/**",
+                                "/admin/quanlydatphong/cancel/**")
                         .hasRole(ADMIN.name())
                         .anyRequest()
                         .authenticated())

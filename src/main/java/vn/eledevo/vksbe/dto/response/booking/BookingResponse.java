@@ -1,13 +1,15 @@
-package vn.eledevo.vksbe.dto.response.room;
+package vn.eledevo.vksbe.dto.response.booking;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.NumberFormat;
 import vn.eledevo.vksbe.constant.RoomStatus;
+import vn.eledevo.vksbe.entity.Room;
 import vn.eledevo.vksbe.entity.RoomType;
+import vn.eledevo.vksbe.entity.User;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,14 +18,12 @@ import vn.eledevo.vksbe.entity.RoomType;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class RoomResponse {
-    Integer id;
-    String name;
-    String roomNumber;
-    String floor;
-    RoomType roomType;
-    String description;
-    String price;
+public class BookingResponse {
+    Long id;
+    Room room;
+    User user;
+    LocalDateTime checkInDate;
+    LocalDateTime checkoutDate;
     @Enumerated(EnumType.STRING)
     RoomStatus status;
 }
