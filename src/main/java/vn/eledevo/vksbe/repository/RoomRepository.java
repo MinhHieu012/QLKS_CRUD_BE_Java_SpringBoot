@@ -24,6 +24,5 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             @Param("floor") String floor,
             @Param("roomTypeId") Long roomTypeId,
             @Param("status") String status,
-            Pageable pageable
-    );
+            Pageable pageable);
 }

@@ -41,7 +41,7 @@ public class Room {
     @JoinColumn(name = "user_id")
     User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_type_id")
     RoomType roomType;
 }

@@ -49,8 +49,6 @@ public class RoomServiceImpl implements RoomService {
             throw new ValidationException("Số phòng này", "đã tồn tại");
         }
 
-        RoomStatus roomStatus = RoomStatus.ACTIVE;
-
         // Khởi tạo đối tượng User
         User userUUID = new User();
 
@@ -79,7 +77,7 @@ public class RoomServiceImpl implements RoomService {
         room.setRoomType(roomTypeID);
 
         // Set trạng thái phòng mặc định là "ACTIVE"
-        room.setStatus(roomStatus);
+        room.setStatus(RoomStatus.ACTIVE);
 
         // Lưu data xuống db
         Room roomAddData = repository.save(room);
@@ -144,16 +142,14 @@ public class RoomServiceImpl implements RoomService {
             String floor,
             Long roomTypeId,
             String status) {
-        Pageable roomPageable = PageRequest.of(
-                page - 1, limit,
-                Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
+        Pageable roomPageable =
+                PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
-        List<Room> roomList = repository.listRoomSearchedAndPagingFromDB(name, roomNumber, floor, roomTypeId, status, roomPageable);
+        List<Room> roomList =
+                repository.listRoomSearchedAndPagingFromDB(name, roomNumber, floor, roomTypeId, status, roomPageable);
 
-        List<RoomResponse> listSortAndPagingAndSearch = roomList
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+        List<RoomResponse> listSortAndPagingAndSearch =
+                roomList.stream().map(mapper::toResponse).toList();
         return listSortAndPagingAndSearch;
     }
 }

@@ -2,6 +2,7 @@ package vn.eledevo.vksbe.dto.response.room;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.eledevo.vksbe.entity.RoomType;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class RoomResponse {
     String name;
     String roomNumber;
     String floor;
-    Long roomTypeId;
+    RoomType roomTypeId;
     String description;
     String price;
     String roomStatus;
