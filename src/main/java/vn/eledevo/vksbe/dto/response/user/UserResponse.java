@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.Role;
@@ -24,8 +25,10 @@ public class UserResponse {
     Date dateOfBirth;
     String phone;
     Long identificationNumber;
+
     @Enumerated(EnumType.STRING)
     Role role;
+
     @Enumerated(EnumType.STRING)
     UserStatus status;
 }

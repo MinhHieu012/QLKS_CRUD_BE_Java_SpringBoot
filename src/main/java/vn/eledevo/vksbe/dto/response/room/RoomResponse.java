@@ -23,6 +23,7 @@ public class RoomResponse {
     RoomType roomType;
     String description;
     String price;
+
     @Enumerated(EnumType.STRING)
     RoomStatus status;
 }

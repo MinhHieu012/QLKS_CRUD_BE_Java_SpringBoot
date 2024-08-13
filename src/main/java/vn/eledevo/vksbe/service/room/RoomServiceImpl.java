@@ -49,55 +49,29 @@ public class RoomServiceImpl implements RoomService {
             throw new ValidationException("Số phòng này", "đã tồn tại");
         }
 
-        // Khởi tạo đối tượng User
         User userUUID = new User();
-
-        // Lưu UserId (UUID) vào biến userUUID của đối tượng User
         userUUID.setId(SecurityUtils.getUserId());
 
-        /**
-         * Vì bên entity Room đang lưu (room_type_id) là 1 đối tượng RoomType -> Ko lưu đc trực tiếp id ở rq xuống
-         * -> Mà phải lưu đối tượng -> Phải dùng findById -> Tìm đối tượng RoomType có id giống với id ở rq xuống
-         * -> Và gán vào biến roomTypeFromDB -> Biến roomTypeFromDB chứa đối tượng RoomType đúng với id ở rq xuống
-         * -> Gán giá trị đối tượng đó vào đối tượng RoomType ở Room (đang là khóa ngoại FK)
-         * => Mới lưu đc
-         *
-         * => Cùng KDL mới lưu đc (Ban đầu số != đối tượng) -> Ko lưu đc
-         */
         Optional<RoomType> roomTypeFromDB = roomTypeRepository.findById(roomRequest.getRoomTypeId());
 
-        // Chuyển rq -> entity
-        Room room = mapper.toEntity(roomRequest);
-
-        // Set (lưu) UUID vào đối tượng User ở Room entity
-        room.setUser(userUUID);
-
-        // Set trạng thái phòng mặc định là "ACTIVE"
-        room.setStatus(RoomStatus.ACTIVE);
-
-        // Lưu data xuống db
-        Room roomAddData = repository.save(room);
-
-        // Chuyển entity -> rp
-        RoomResponse roomResponse = mapper.toResponse(roomAddData);
-
-        /**
-         * -> Khởi tạo đối tượng RoomType
-         * -> Get dữ liệu id, name,... trong roomTypeFromDB (dữ liệu kiểu phòng lấy trong DB qua id gửi qua rq)
-         * -> Set vào biến roomType của đối tượng RoomType
-         *
-         * => Chỉ set những dữ liệu kiểu phòng (RoomType) muốn gửi về cho FE (response)
-         */
         RoomType roomType = new RoomType();
         roomType.setId(roomTypeFromDB.get().getId());
         roomType.setName(roomTypeFromDB.get().getName());
         roomType.setMaxPeople(roomTypeFromDB.get().getMaxPeople());
         roomType.setDescription(roomTypeFromDB.get().getDescription());
 
-        /**
-         * -> Dùng roomType đã set id, name, description
-         * -> Set vào đối tượng RoomType bên Response để hiển thị cho FE
-         */
+        Room room = mapper.toEntity(roomRequest);
+
+        room.setRoomType(roomType);
+
+        room.setUser(userUUID);
+
+        room.setStatus(RoomStatus.ACTIVE);
+
+        Room roomAddData = repository.save(room);
+
+        RoomResponse roomResponse = mapper.toResponse(roomAddData);
+
         roomResponse.setRoomType(roomType);
 
         return roomResponse;
@@ -115,43 +89,28 @@ public class RoomServiceImpl implements RoomService {
         userUUID.setId(SecurityUtils.getUserId());
 
         Optional<RoomType> roomTypeFromDB = roomTypeRepository.findById(roomRequest.getRoomTypeId());
-        /**
-         * RoomType roomType = roomTypeFromDB.get();
-         *
-         * -> Bỏ code này vì đã lấy ra đc đổi tượng RoomType theo id rồi
-         * -> Khi .get() thì sẽ tự động get/set name,... (cả các liên kết bảng) của đối tượng User trong Room entity
-         *
-         * => Khi response bị vòng lặp hiển thị giữa các đối tượng Room, User, RoomType
-         */
 
-        // Set đối tượng User trong Room = UUID
-        room.setUser(userUUID);
-        // Set room status
-        room.setStatus(RoomStatus.valueOf(roomRequest.getStatus()));
-
-        // Lưu data xuống db
-        Room roomUpdateData = repository.save(room);
-
-        // Chuyển data sang kiểu response -> hiển thị cho FE
-        RoomResponse roomResponse = mapper.toResponse(roomUpdateData);
-
-        /**
-         * -> Khởi tạo đối tượng RoomType
-         * -> Get dữ liệu id, name,... trong roomTypeFromDB (dữ liệu kiểu phòng lấy trong DB qua id gửi qua rq)
-         * -> Set vào biến roomType của đối tượng RoomType
-         *
-         * => Chỉ set những dữ liệu kiểu phòng (RoomType) muốn gửi về cho FE (response)
-         */
         RoomType roomType = new RoomType();
         roomType.setId(roomTypeFromDB.get().getId());
         roomType.setName(roomTypeFromDB.get().getName());
         roomType.setMaxPeople(roomTypeFromDB.get().getMaxPeople());
         roomType.setDescription(roomTypeFromDB.get().getDescription());
 
-        /**
-         * -> Dùng roomType đã set id, name, description
-         * -> Set vào đối tượng RoomType bên Response để hiển thị cho FE
-         */
+        room.setRoomType(roomType);
+
+        room.setUser(userUUID);
+
+        room.setName(roomRequest.getName());
+        room.setRoomNumber(roomRequest.getRoomNumber());
+        room.setFloor(roomRequest.getFloor());
+        room.setDescription(roomRequest.getDescription());
+        room.setPrice(roomRequest.getPrice());
+        room.setStatus(RoomStatus.valueOf(roomRequest.getStatus()));
+
+        Room roomUpdateData = repository.save(room);
+
+        RoomResponse roomResponse = mapper.toResponse(roomUpdateData);
+
         roomResponse.setRoomType(roomType);
 
         return roomResponse;
