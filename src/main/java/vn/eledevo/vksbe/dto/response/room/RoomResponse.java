@@ -1,7 +1,11 @@
 package vn.eledevo.vksbe.dto.response.room;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.eledevo.vksbe.constant.RoomStatus;
 import vn.eledevo.vksbe.entity.RoomType;
 
 @Getter
@@ -16,8 +20,9 @@ public class RoomResponse {
     String name;
     String roomNumber;
     String floor;
-    RoomType roomTypeId;
+    RoomType roomType;
     String description;
     String price;
-    String roomStatus;
+    @Enumerated(EnumType.STRING)
+    RoomStatus status;
 }
