@@ -1,29 +1,26 @@
-package vn.eledevo.vksbe.dto.response.booking;
-
-import java.time.LocalDateTime;
+package vn.eledevo.vksbe.dto.request.booking;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.BookingStatus;
-import vn.eledevo.vksbe.entity.Room;
-import vn.eledevo.vksbe.entity.User;
 
-@Getter
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Setter
+@Getter
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class BookingResponse {
-    Long id;
-    Room room;
-    User user;
+public class BookingUpdateRequest {
+    UUID userId;
+    Integer roomId;
     LocalDateTime checkInDate;
     LocalDateTime checkoutDate;
+    String amount;
+    String deposit;
     @Enumerated(EnumType.STRING)
     BookingStatus status;
 }

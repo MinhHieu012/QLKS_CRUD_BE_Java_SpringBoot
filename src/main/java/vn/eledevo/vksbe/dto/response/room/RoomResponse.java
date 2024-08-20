@@ -5,7 +5,6 @@ import jakarta.persistence.Enumerated;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.NumberFormat;
 import vn.eledevo.vksbe.constant.RoomStatus;
 import vn.eledevo.vksbe.entity.RoomType;
 

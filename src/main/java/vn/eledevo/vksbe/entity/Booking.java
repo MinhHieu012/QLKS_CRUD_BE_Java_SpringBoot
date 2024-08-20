@@ -1,12 +1,13 @@
 package vn.eledevo.vksbe.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.eledevo.vksbe.constant.RoomStatus;
-
-import java.time.LocalDateTime;
+import vn.eledevo.vksbe.constant.BookingStatus;
 
 @Entity
 @Getter
@@ -34,7 +35,7 @@ public class Booking {
     String deposit;
 
     @Enumerated(EnumType.STRING)
-    RoomStatus status;
+    BookingStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

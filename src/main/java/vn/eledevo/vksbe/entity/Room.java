@@ -1,13 +1,13 @@
 package vn.eledevo.vksbe.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.RoomStatus;
-
-import java.util.List;
 
 @Entity
 @Getter

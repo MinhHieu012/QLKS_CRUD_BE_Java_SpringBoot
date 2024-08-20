@@ -1,15 +1,12 @@
 package vn.eledevo.vksbe.dto.request.booking;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import vn.eledevo.vksbe.constant.RoomStatus;
-import vn.eledevo.vksbe.entity.Room;
-import vn.eledevo.vksbe.entity.User;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Setter
 @Getter
