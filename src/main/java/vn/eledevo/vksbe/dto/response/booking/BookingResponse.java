@@ -24,6 +24,7 @@ public class BookingResponse {
     User user;
     LocalDateTime checkInDate;
     LocalDateTime checkoutDate;
+
     @Enumerated(EnumType.STRING)
     BookingStatus status;
 }

@@ -1,13 +1,14 @@
 package vn.eledevo.vksbe.dto.request.booking;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.BookingStatus;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Setter
 @Getter
@@ -21,6 +22,7 @@ public class BookingUpdateRequest {
     LocalDateTime checkoutDate;
     String amount;
     String deposit;
+
     @Enumerated(EnumType.STRING)
     BookingStatus status;
 }

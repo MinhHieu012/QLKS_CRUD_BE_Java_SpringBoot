@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import lombok.AccessLevel;
@@ -80,8 +84,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResponse updateBooking(Long id, BookingUpdateRequest bookingUpdateRequest) throws ValidationException {
-        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new ValidationException("Booking", "Booking not found!"));
+    public BookingResponse updateBooking(Long id, BookingUpdateRequest bookingUpdateRequest)
+            throws ValidationException {
+        Booking booking = bookingRepository
+                .findById(id)
+                .orElseThrow(() -> new ValidationException("Booking", "Booking not found!"));
 
         User userUUID = new User();
         userUUID.setId(SecurityUtils.getUserId());
@@ -119,7 +126,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponse cancelBooking(Long id) throws ValidationException {
-        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new ValidationException("Booking", "Booking not found!"));
+        Booking booking = bookingRepository
+                .findById(id)
+                .orElseThrow(() -> new ValidationException("Booking", "Booking not found!"));
         booking.setStatus(BookingStatus.CANCEL);
         Booking bookingCancelData = bookingRepository.save(booking);
         return null;
@@ -131,11 +140,20 @@ public class BookingServiceImpl implements BookingService {
             int page,
             int limit,
             String orderedColumn,
-            Long id,
-            Room roomName,
-            User userName,
-            LocalDateTime checkInDate,
-            LocalDateTime checkOutData) {
-        return null;
+            String id,
+            String roomName,
+            String userName,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkInDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate) {
+        Pageable bookingPageable =
+                PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
+
+        List<Booking> bookingList = bookingRepository.listBookingSearchedAndPagingFromDB(
+                String.valueOf(id), userName, roomName, checkInDate, checkOutDate, bookingPageable);
+
+        List<BookingResponse> roomTypeResponseList =
+                bookingList.stream().map(mapper::toResponse).toList();
+
+        return roomTypeResponseList;
     }
 }
