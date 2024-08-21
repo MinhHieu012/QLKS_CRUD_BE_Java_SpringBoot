@@ -4,5 +4,6 @@ public enum RoomStatus {
     ACTIVE,
     LOCK,
     CLEANING,
-    USING
+    USING,
+    APPROVED
 }

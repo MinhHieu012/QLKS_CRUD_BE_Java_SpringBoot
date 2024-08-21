@@ -1,9 +1,11 @@
 package vn.eledevo.vksbe.service.booking;
 
+import static vn.eledevo.vksbe.constant.ResponseMessage.BOOKING_EXISTS;
+import static vn.eledevo.vksbe.constant.ResponseMessage.BOOKING_EXISTS_IN_RANGE;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +50,17 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResponse addBooking(BookingRequest bookingRequest) {
+    public BookingResponse addBooking(BookingRequest bookingRequest) throws ValidationException {
+
+        if (bookingRepository.validateSameBooking(
+                bookingRequest.getRoomId(), bookingRequest.getCheckInDate(), bookingRequest.getCheckoutDate())) {
+            throw new ValidationException("Lỗi", BOOKING_EXISTS);
+        }
+
+        if (bookingRepository.validateOnRangeBooking(
+                bookingRequest.getRoomId(), bookingRequest.getCheckInDate(), bookingRequest.getCheckoutDate())) {
+            throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE);
+        }
 
         User userUUID = new User();
         userUUID.setId(SecurityUtils.getUserId());
@@ -145,19 +157,15 @@ public class BookingServiceImpl implements BookingService {
             String roomName,
             String userName,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkInDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate)
-    {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate) {
         Pageable bookingPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
         List<Booking> bookingList = bookingRepository.listBookingSearchedAndPagingFromDB(
-                bookingId, userName, roomName, checkInDate, checkOutDate, bookingPageable
-        );
+                bookingId, userName, roomName, checkInDate, checkOutDate, bookingPageable);
 
-        List<BookingResponse> listSortAndPagingAndSearch = bookingList
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+        List<BookingResponse> listSortAndPagingAndSearch =
+                bookingList.stream().map(mapper::toResponse).toList();
 
         return listSortAndPagingAndSearch;
     }

@@ -79,10 +79,10 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomResponse updateRoom(Integer id, RoomRequest roomRequest) throws ValidationException {
-        Room room = repository.findById(id).orElseThrow(() -> new ValidationException("Room", "Room not found!"));
+        Room room = repository.findById(id).orElseThrow(() -> new ValidationException("Error", "Room not found!"));
 
         if (repository.existsByRoomNumber(roomRequest.getRoomNumber())) {
-            throw new ValidationException("Số phòng này", "đã tồn tại");
+            throw new ValidationException("Lỗi", "Số phòng này đã tồn tại");
         }
 
         User userUUID = new User();
@@ -141,8 +141,7 @@ public class RoomServiceImpl implements RoomService {
             String roomNumber,
             String floor,
             Long roomTypeId,
-            String status)
-    {
+            String status) {
         Pageable roomPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 

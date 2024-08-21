@@ -13,7 +13,7 @@ import vn.eledevo.vksbe.exception.ValidationException;
 public interface BookingService {
     List<BookingResponse> getAllBookings();
 
-    BookingResponse addBooking(BookingRequest bookingRequest);
+    BookingResponse addBooking(BookingRequest bookingRequest) throws ValidationException;
 
     BookingResponse updateBooking(Long id, BookingUpdateRequest bookingUpdateRequest) throws ValidationException;
 

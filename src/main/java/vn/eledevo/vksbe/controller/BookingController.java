@@ -29,7 +29,7 @@ public class BookingController {
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse addBooking(@RequestBody BookingRequest bookingRequest) {
+    public ApiResponse addBooking(@RequestBody BookingRequest bookingRequest) throws ValidationException {
         return new ApiResponse<>(201, "Create booking success!", bookingService.addBooking(bookingRequest));
     }
 
@@ -57,8 +57,7 @@ public class BookingController {
             @Nullable @RequestParam("roomName") String roomName,
             @Nullable @RequestParam("userName") String userName,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkInDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate
-    ) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate) {
         return new ApiResponse<>(
                 200,
                 "Filter booking success!",

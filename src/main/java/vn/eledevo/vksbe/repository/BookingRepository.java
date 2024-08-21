@@ -11,6 +11,32 @@ import org.springframework.data.repository.query.Param;
 import vn.eledevo.vksbe.entity.Booking;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
+
+    /**
+     * Lịch đặt có room ko bị trùng thời gian check-in, check-out lịch khác - DONE
+     * Lịch đặt có room ko đc nằm trong khoảng thời gian check-in, check-out của lịch khác
+     * Lịch đặt có sát thời gian check-in của lịch trước đó ko (tối thiểu cách 1h)
+     * Lịch đặt không được chọn phòng đang được sử dụng (LOCK), (USING), (CLEANNING) và (APPROVED) - DONE
+     */
+    @Query(
+            """
+                SELECT COUNT(b) >= 1 FROM Booking b
+                WHERE :roomId = b.room.id
+                AND :checkInDate = b.checkInDate AND :checkoutDate = b.checkoutDate
+                AND b.room.status NOT IN ('LOCK', 'CLEANNING', 'USING', 'APPROVED')
+            """
+    )
+    Boolean validateSameBooking(Integer roomId, LocalDateTime checkInDate, LocalDateTime checkoutDate);
+
+    @Query(
+            """
+                SELECT COUNT(b) > 0 FROM Booking b
+                WHERE b.room.id = :roomId
+                AND (:checkInDate < b.checkoutDate AND :checkoutDate > b.checkInDate)
+            """
+    )
+    Boolean validateOnRangeBooking(Integer roomId, LocalDateTime checkInDate, LocalDateTime checkoutDate);
+
     @Query("SELECT b FROM Booking b "
             + "WHERE (:bookingId IS NULL OR b.id = :bookingId) "
             + "AND (:roomName IS NULL OR b.room.name LIKE %:roomName%) "

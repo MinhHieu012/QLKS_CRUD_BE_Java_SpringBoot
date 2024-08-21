@@ -9,10 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import vn.eledevo.vksbe.entity.Room;
-import vn.eledevo.vksbe.entity.User;
 
 public interface RoomRepository extends JpaRepository<Room, Integer> {
     Boolean existsByRoomNumber(String roomNumber);
+
     Optional<Room> findRoomByName(String roomName);
 
     @Query("SELECT r FROM Room r "
