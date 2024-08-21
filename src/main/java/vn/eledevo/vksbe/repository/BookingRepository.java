@@ -14,7 +14,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     /**
      * Lịch đặt có room ko bị trùng thời gian check-in, check-out lịch khác - DONE
-     * Lịch đặt có room ko đc nằm trong khoảng thời gian check-in, check-out của lịch khác
+     * Lịch đặt có room ko đc nằm trong khoảng thời gian check-in, check-out của lịch khác - DOING... (Chưa xong)
      * Lịch đặt có sát thời gian check-in của lịch trước đó ko (tối thiểu cách 1h)
      * Lịch đặt không được chọn phòng đang được sử dụng (LOCK), (USING), (CLEANNING) và (APPROVED) - DONE
      */
