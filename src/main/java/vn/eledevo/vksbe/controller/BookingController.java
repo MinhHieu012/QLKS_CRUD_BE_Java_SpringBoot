@@ -52,25 +52,17 @@ public class BookingController {
             @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "limit", defaultValue = "2") int limit,
-            @RequestParam(value = "orderedColumn", defaultValue = "name") String orderedColumn,
-            @Nullable @RequestParam("id") Long id,
+            @RequestParam(value = "orderedColumn", defaultValue = "id") String orderedColumn,
+            @Nullable @RequestParam("bookingId") Long bookingId,
             @Nullable @RequestParam("roomName") String roomName,
             @Nullable @RequestParam("userName") String userName,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkInDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate
+    ) {
         return new ApiResponse<>(
                 200,
                 "Filter booking success!",
                 bookingService.sortAndPagingAndSearch(
-                        orderBy,
-                        page,
-                        limit,
-                        orderedColumn,
-                        String.valueOf(id),
-                        roomName,
-                        userName,
-                        checkInDate,
-                        checkOutDate)
-        );
+                        orderBy, page, limit, orderedColumn, bookingId, roomName, userName, checkInDate, checkOutDate));
     }
 }

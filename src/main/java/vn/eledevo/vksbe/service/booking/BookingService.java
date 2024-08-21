@@ -24,7 +24,7 @@ public interface BookingService {
             int page,
             int limit,
             String orderedColumn,
-            String id,
+            Long bookingId,
             String roomName,
             String userName,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkInDate,

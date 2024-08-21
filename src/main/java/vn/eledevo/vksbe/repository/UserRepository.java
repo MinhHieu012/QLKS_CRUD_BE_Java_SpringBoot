@@ -21,6 +21,8 @@ public interface UserRepository extends BaseRepository<User, UUID> {
 
     Boolean existsByIdentificationNumber(String identificationNumber);
 
+    Optional<User> findUserByUsername(String userName);
+
     @Query("SELECT u FROM User u " + "WHERE (:username IS NULL OR u.username LIKE %:username%) "
             + "AND (:phone IS NULL OR u.phone LIKE %:phone%) "
             + "AND (:identificationNumber IS NULL OR u.identificationNumber LIKE %:identificationNumber%) ")

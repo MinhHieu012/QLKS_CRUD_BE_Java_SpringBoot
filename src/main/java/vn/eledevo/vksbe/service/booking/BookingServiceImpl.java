@@ -3,6 +3,7 @@ package vn.eledevo.vksbe.service.booking;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -140,20 +141,24 @@ public class BookingServiceImpl implements BookingService {
             int page,
             int limit,
             String orderedColumn,
-            String id,
+            Long bookingId,
             String roomName,
             String userName,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkInDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate)
+    {
         Pageable bookingPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
         List<Booking> bookingList = bookingRepository.listBookingSearchedAndPagingFromDB(
-                String.valueOf(id), userName, roomName, checkInDate, checkOutDate, bookingPageable);
+                bookingId, userName, roomName, checkInDate, checkOutDate, bookingPageable
+        );
 
-        List<BookingResponse> roomTypeResponseList =
-                bookingList.stream().map(mapper::toResponse).toList();
+        List<BookingResponse> listSortAndPagingAndSearch = bookingList
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
 
-        return roomTypeResponseList;
+        return listSortAndPagingAndSearch;
     }
 }

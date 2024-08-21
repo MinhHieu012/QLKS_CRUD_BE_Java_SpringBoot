@@ -1,6 +1,7 @@
 package vn.eledevo.vksbe.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,9 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import vn.eledevo.vksbe.entity.Room;
+import vn.eledevo.vksbe.entity.User;
 
 public interface RoomRepository extends JpaRepository<Room, Integer> {
     Boolean existsByRoomNumber(String roomNumber);
+    Optional<Room> findRoomByName(String roomName);
 
     @Query("SELECT r FROM Room r "
             + "WHERE (:name IS NULL OR r.name LIKE %:name%) "

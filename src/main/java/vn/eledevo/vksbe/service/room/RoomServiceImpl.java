@@ -141,7 +141,8 @@ public class RoomServiceImpl implements RoomService {
             String roomNumber,
             String floor,
             Long roomTypeId,
-            String status) {
+            String status)
+    {
         Pageable roomPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
