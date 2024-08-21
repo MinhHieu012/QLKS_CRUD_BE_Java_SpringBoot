@@ -1,7 +1,6 @@
 package vn.eledevo.vksbe.service.booking;
 
-import static vn.eledevo.vksbe.constant.ResponseMessage.BOOKING_EXISTS;
-import static vn.eledevo.vksbe.constant.ResponseMessage.BOOKING_EXISTS_IN_RANGE;
+import static vn.eledevo.vksbe.constant.ResponseMessage.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,6 +59,11 @@ public class BookingServiceImpl implements BookingService {
         if (bookingRepository.validateOnRangeBooking(
                 bookingRequest.getRoomId(), bookingRequest.getCheckInDate(), bookingRequest.getCheckoutDate())) {
             throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE);
+        }
+
+        if (bookingRepository.validateRange1HourBooking(
+                bookingRequest.getRoomId(), bookingRequest.getCheckInDate().minusHours(1))) {
+            throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE_1H);
         }
 
         User userUUID = new User();

@@ -29,4 +29,7 @@ public class ResponseMessage {
 
     public static final String BOOKING_EXISTS_IN_RANGE =
             "Thời gian hoặc phòng bạn chọn đã được nguời khác đặt trước! Vui lòng lựa chọn lại!";
+
+    public static final String BOOKING_EXISTS_IN_RANGE_1H =
+            "Thời gian check-in bạn chọn không phù hợp! Thời gian này chúng tôi đang dọn dẹp";
 }
