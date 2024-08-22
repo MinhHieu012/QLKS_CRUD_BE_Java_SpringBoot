@@ -35,13 +35,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 			""")
     Boolean validateOnRangeBooking(Integer roomId, LocalDateTime checkInDate, LocalDateTime checkoutDate);
 
-	@Query(
-			"""
-               	SELECT COUNT(b) > 0 FROM Booking b
-                WHERE b.room.id = :roomId
-                AND (:checkInDate <= b.checkoutDate)
-            """)
-	Boolean validateRange1HourBooking(Integer roomId, LocalDateTime checkInDate);
+    @Query(
+            """
+				SELECT COUNT(b) > 0 FROM Booking b
+				WHERE b.room.id = :roomId
+				AND (:checkInDate <= b.checkoutDate)
+			""")
+    Boolean validateRange1HourBooking(Integer roomId, LocalDateTime checkInDate);
 
     @Query("SELECT b FROM Booking b "
             + "WHERE (:bookingId IS NULL OR b.id = :bookingId) "
@@ -55,5 +55,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("userName") String userName,
             @Param("checkInDate") LocalDateTime checkInDate,
             @Param("checkOutDate") LocalDateTime checkOutDate,
-            Pageable pageable);
+            Pageable pageable
+	);
 }

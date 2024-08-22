@@ -5,6 +5,7 @@ import static vn.eledevo.vksbe.constant.ResponseMessage.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,8 @@ import vn.eledevo.vksbe.constant.BookingStatus;
 import vn.eledevo.vksbe.dto.request.booking.BookingRequest;
 import vn.eledevo.vksbe.dto.request.booking.BookingUpdateRequest;
 import vn.eledevo.vksbe.dto.response.booking.BookingResponse;
+import vn.eledevo.vksbe.dto.response.booking.RoomDTOResponse;
+import vn.eledevo.vksbe.dto.response.booking.UserDTOResponse;
 import vn.eledevo.vksbe.entity.Booking;
 import vn.eledevo.vksbe.entity.Room;
 import vn.eledevo.vksbe.entity.User;
@@ -66,77 +69,76 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE_1H);
         }
 
-        User userUUID = new User();
-        userUUID.setId(SecurityUtils.getUserId());
-
         Optional<Room> roomDataFromDB = roomRepository.findById(bookingRequest.getRoomId());
-        Room roomDataSaveToEntityBooking = new Room();
-        roomDataSaveToEntityBooking.setId(roomDataFromDB.get().getId());
-        roomDataSaveToEntityBooking.setName(roomDataFromDB.get().getName());
-        roomDataSaveToEntityBooking.setRoomNumber(roomDataFromDB.get().getRoomNumber());
-        roomDataSaveToEntityBooking.setFloor(roomDataFromDB.get().getFloor());
+        if (roomDataFromDB.isEmpty()) {
+            throw new ValidationException("Lỗi", "Phòng bạn chọn không tồn tại");
+        }
+        Room room = roomDataFromDB.get();
 
         Optional<User> userDataFromDB = userRepository.findById(bookingRequest.getUserId());
-        User userDataSaveToEntityBooking = new User();
-        userDataSaveToEntityBooking.setId(userDataFromDB.get().getId());
-        userDataSaveToEntityBooking.setUsername(userDataFromDB.get().getUsername());
-        userDataSaveToEntityBooking.setPhone(userDataFromDB.get().getPhone());
-        userDataSaveToEntityBooking.setRole(userDataFromDB.get().getRole());
+        if (userDataFromDB.isEmpty()) {
+            throw new ValidationException("Lỗi", "Người dùng không tồn tại");
+        }
+        User user = userDataFromDB.get();
 
         Booking booking = mapper.toEntity(bookingRequest);
-
-        booking.setRoom(roomDataSaveToEntityBooking);
-        booking.setUser(userDataSaveToEntityBooking);
-
+        booking.setRoom(room);
+        booking.setUser(user);
         booking.setStatus(BookingStatus.PENDING);
 
-        Booking bookingAddDataToDB = bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
 
-        BookingResponse bookingResponseToFE = mapper.toResponse(bookingAddDataToDB);
-
-        bookingResponseToFE.setRoom(roomDataSaveToEntityBooking);
-        bookingResponseToFE.setUser(userDataSaveToEntityBooking);
+        BookingResponse bookingResponseToFE = mapper.toResponse(savedBooking);
 
         return bookingResponseToFE;
     }
 
-    @Override
-    public BookingResponse updateBooking(Long id, BookingUpdateRequest bookingUpdateRequest)
-            throws ValidationException {
-        Booking booking = bookingRepository
-                .findById(id)
-                .orElseThrow(() -> new ValidationException("Booking", "Booking not found!"));
 
-        User userUUID = new User();
-        userUUID.setId(SecurityUtils.getUserId());
+    @Override
+    public BookingResponse updateBooking(Long id, BookingUpdateRequest bookingUpdateRequest) throws ValidationException {
+        Booking booking = bookingRepository.findById(id).orElseThrow(()
+                -> new ValidationException("Booking", "Booking not found!")
+        );
+
+        if (bookingRepository.validateSameBooking(
+                bookingUpdateRequest.getRoomId(),
+                bookingUpdateRequest.getCheckInDate(),
+                bookingUpdateRequest.getCheckoutDate())) {
+            throw new ValidationException("Lỗi", BOOKING_EXISTS);
+        }
+
+        if (bookingRepository.validateOnRangeBooking(
+                bookingUpdateRequest.getRoomId(),
+                bookingUpdateRequest.getCheckInDate(),
+                bookingUpdateRequest.getCheckoutDate())) {
+            throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE);
+        }
+
+        if (bookingRepository.validateRange1HourBooking(
+                bookingUpdateRequest.getRoomId(),
+                bookingUpdateRequest.getCheckInDate().minusHours(1))) {
+            throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE_1H);
+        }
 
         Optional<Room> roomDataFromDB = roomRepository.findById(bookingUpdateRequest.getRoomId());
-        Room roomDataSaveToEntityBooking = new Room();
-        roomDataSaveToEntityBooking.setId(roomDataFromDB.get().getId());
-        roomDataSaveToEntityBooking.setName(roomDataFromDB.get().getName());
-        roomDataSaveToEntityBooking.setRoomNumber(roomDataFromDB.get().getRoomNumber());
-        roomDataSaveToEntityBooking.setFloor(roomDataFromDB.get().getFloor());
+        if (roomDataFromDB.isEmpty()) {
+            throw new ValidationException("Lỗi", "Phòng bạn chọn không tồn tại");
+        }
+        Room roomUpdateSaveToEntity = roomDataFromDB.get();
 
         Optional<User> userDataFromDB = userRepository.findById(bookingUpdateRequest.getUserId());
-        User userDataSaveToEntityBooking = new User();
-        userDataSaveToEntityBooking.setId(userDataFromDB.get().getId());
-        userDataSaveToEntityBooking.setUsername(userDataFromDB.get().getUsername());
-        userDataSaveToEntityBooking.setPhone(userDataFromDB.get().getPhone());
-        userDataSaveToEntityBooking.setRole(userDataFromDB.get().getRole());
+        if (userDataFromDB.isEmpty()) {
+            throw new ValidationException("Lỗi", "Người dùng không tồn tại");
+        }
+        User userUpdateDataSaveToEntity = userDataFromDB.get();
 
-        booking.setUser(userDataSaveToEntityBooking);
-        booking.setRoom(roomDataSaveToEntityBooking);
-        booking.setCheckInDate(bookingUpdateRequest.getCheckInDate());
-        booking.setCheckoutDate(bookingUpdateRequest.getCheckoutDate());
-        booking.setAmount(bookingUpdateRequest.getAmount());
-        booking.setDeposit(bookingUpdateRequest.getDeposit());
+        booking.setRoom(roomUpdateSaveToEntity);
+        booking.setUser(userUpdateDataSaveToEntity);
         booking.setStatus(bookingUpdateRequest.getStatus());
 
         Booking bookingUpdateData = bookingRepository.save(booking);
 
         BookingResponse bookingResponseToFE = mapper.toResponse(bookingUpdateData);
-        bookingResponseToFE.setUser(userDataSaveToEntityBooking);
-        bookingResponseToFE.setRoom(roomDataSaveToEntityBooking);
 
         return bookingResponseToFE;
     }
@@ -169,7 +171,26 @@ public class BookingServiceImpl implements BookingService {
                 bookingId, userName, roomName, checkInDate, checkOutDate, bookingPageable);
 
         List<BookingResponse> listSortAndPagingAndSearch =
-                bookingList.stream().map(mapper::toResponse).toList();
+                bookingList.stream().map(booking -> {
+                     RoomDTOResponse roomDTO = new RoomDTOResponse(
+                            booking.getRoom().getId(),
+                            booking.getRoom().getName(),
+                            booking.getRoom().getRoomNumber(),
+                            booking.getRoom().getFloor(),
+                            booking.getRoom().getPrice());
+                     UserDTOResponse userDTO = new UserDTOResponse(
+                            booking.getUser().getId(),
+                            booking.getUser().getUsername(),
+                            booking.getUser().getPhone());
+                    return BookingResponse.builder()
+                            .id(booking.getId())
+                            .room(roomDTO)
+                            .user(userDTO)
+                            .checkInDate(booking.getCheckInDate())
+                            .checkoutDate(booking.getCheckoutDate())
+                            .status(booking.getStatus())
+                            .build();
+                }).collect(Collectors.toList());
 
         return listSortAndPagingAndSearch;
     }
