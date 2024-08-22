@@ -6,7 +6,7 @@ import jakarta.persistence.Enumerated;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.RoomStatus;
-import vn.eledevo.vksbe.entity.RoomType;
+import vn.eledevo.vksbe.dto.response.roomtype.RoomTypeResponseDTO;
 
 @Getter
 @Setter
@@ -20,7 +20,7 @@ public class RoomResponse {
     String name;
     String roomNumber;
     String floor;
-    RoomType roomType;
+    RoomTypeResponseDTO roomType;
     String description;
     String price;
 

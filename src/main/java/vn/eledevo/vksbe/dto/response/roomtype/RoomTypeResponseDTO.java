@@ -1,4 +1,4 @@
-package vn.eledevo.vksbe.dto.response.booking;
+package vn.eledevo.vksbe.dto.response.roomtype;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,10 +10,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class RoomDTOResponse {
-    Integer id;
+public class RoomTypeResponseDTO {
+    Long id;
     String name;
-    String roomNumber;
-    String floor;
-    String price;
+    String maxPeople;
+    String description;
 }

@@ -55,6 +55,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("userName") String userName,
             @Param("checkInDate") LocalDateTime checkInDate,
             @Param("checkOutDate") LocalDateTime checkOutDate,
-            Pageable pageable
-	);
+            Pageable pageable);
 }

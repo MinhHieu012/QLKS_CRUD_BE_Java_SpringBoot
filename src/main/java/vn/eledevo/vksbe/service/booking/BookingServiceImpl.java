@@ -30,7 +30,6 @@ import vn.eledevo.vksbe.mapper.BookingMapper;
 import vn.eledevo.vksbe.repository.BookingRepository;
 import vn.eledevo.vksbe.repository.RoomRepository;
 import vn.eledevo.vksbe.repository.UserRepository;
-import vn.eledevo.vksbe.utils.SecurityUtils;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -93,12 +92,12 @@ public class BookingServiceImpl implements BookingService {
         return bookingResponseToFE;
     }
 
-
     @Override
-    public BookingResponse updateBooking(Long id, BookingUpdateRequest bookingUpdateRequest) throws ValidationException {
-        Booking booking = bookingRepository.findById(id).orElseThrow(()
-                -> new ValidationException("Booking", "Booking not found!")
-        );
+    public BookingResponse updateBooking(Long id, BookingUpdateRequest bookingUpdateRequest)
+            throws ValidationException {
+        Booking booking = bookingRepository
+                .findById(id)
+                .orElseThrow(() -> new ValidationException("Booking", "Booking not found!"));
 
         if (bookingRepository.validateSameBooking(
                 bookingUpdateRequest.getRoomId(),
@@ -170,15 +169,15 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookingList = bookingRepository.listBookingSearchedAndPagingFromDB(
                 bookingId, userName, roomName, checkInDate, checkOutDate, bookingPageable);
 
-        List<BookingResponse> listSortAndPagingAndSearch =
-                bookingList.stream().map(booking -> {
-                     RoomDTOResponse roomDTO = new RoomDTOResponse(
+        List<BookingResponse> listSortAndPagingAndSearch = bookingList.stream()
+                .map(booking -> {
+                    RoomDTOResponse roomDTO = new RoomDTOResponse(
                             booking.getRoom().getId(),
                             booking.getRoom().getName(),
                             booking.getRoom().getRoomNumber(),
                             booking.getRoom().getFloor(),
                             booking.getRoom().getPrice());
-                     UserDTOResponse userDTO = new UserDTOResponse(
+                    UserDTOResponse userDTO = new UserDTOResponse(
                             booking.getUser().getId(),
                             booking.getUser().getUsername(),
                             booking.getUser().getPhone());
@@ -190,7 +189,8 @@ public class BookingServiceImpl implements BookingService {
                             .checkoutDate(booking.getCheckoutDate())
                             .status(booking.getStatus())
                             .build();
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
 
         return listSortAndPagingAndSearch;
     }

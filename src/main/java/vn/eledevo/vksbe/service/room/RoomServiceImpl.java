@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.RoomStatus;
 import vn.eledevo.vksbe.dto.request.room.RoomRequest;
 import vn.eledevo.vksbe.dto.response.room.RoomResponse;
+import vn.eledevo.vksbe.dto.response.roomtype.RoomTypeResponseDTO;
 import vn.eledevo.vksbe.entity.Room;
 import vn.eledevo.vksbe.entity.RoomType;
 import vn.eledevo.vksbe.entity.User;
@@ -53,26 +54,19 @@ public class RoomServiceImpl implements RoomService {
         userUUID.setId(SecurityUtils.getUserId());
 
         Optional<RoomType> roomTypeFromDB = roomTypeRepository.findById(roomRequest.getRoomTypeId());
-
-        RoomType roomType = new RoomType();
-        roomType.setId(roomTypeFromDB.get().getId());
-        roomType.setName(roomTypeFromDB.get().getName());
-        roomType.setMaxPeople(roomTypeFromDB.get().getMaxPeople());
-        roomType.setDescription(roomTypeFromDB.get().getDescription());
+        if (roomTypeFromDB.isEmpty()) {
+            throw new ValidationException("Lỗi", "Phòng bạn chọn không tồn tại");
+        }
+        RoomType roomtype = roomTypeFromDB.get();
 
         Room room = mapper.toEntity(roomRequest);
-
-        room.setRoomType(roomType);
-
+        room.setRoomType(roomtype);
         room.setUser(userUUID);
-
         room.setStatus(RoomStatus.ACTIVE);
 
         Room roomAddData = repository.save(room);
 
         RoomResponse roomResponse = mapper.toResponse(roomAddData);
-
-        roomResponse.setRoomType(roomType);
 
         return roomResponse;
     }
@@ -89,17 +83,13 @@ public class RoomServiceImpl implements RoomService {
         userUUID.setId(SecurityUtils.getUserId());
 
         Optional<RoomType> roomTypeFromDB = roomTypeRepository.findById(roomRequest.getRoomTypeId());
-
-        RoomType roomType = new RoomType();
-        roomType.setId(roomTypeFromDB.get().getId());
-        roomType.setName(roomTypeFromDB.get().getName());
-        roomType.setMaxPeople(roomTypeFromDB.get().getMaxPeople());
-        roomType.setDescription(roomTypeFromDB.get().getDescription());
-
-        room.setRoomType(roomType);
+        if (roomTypeFromDB.isEmpty()) {
+            throw new ValidationException("Lỗi", "Phòng bạn chọn không tồn tại");
+        }
+        RoomType roomtype = roomTypeFromDB.get();
 
         room.setUser(userUUID);
-
+        room.setRoomType(roomtype);
         room.setName(roomRequest.getName());
         room.setRoomNumber(roomRequest.getRoomNumber());
         room.setFloor(roomRequest.getFloor());
@@ -110,8 +100,6 @@ public class RoomServiceImpl implements RoomService {
         Room roomUpdateData = repository.save(room);
 
         RoomResponse roomResponse = mapper.toResponse(roomUpdateData);
-
-        roomResponse.setRoomType(roomType);
 
         return roomResponse;
     }
@@ -148,8 +136,25 @@ public class RoomServiceImpl implements RoomService {
         List<Room> roomList =
                 repository.listRoomSearchedAndPagingFromDB(name, roomNumber, floor, roomTypeId, status, roomPageable);
 
-        List<RoomResponse> listSortAndPagingAndSearch =
-                roomList.stream().map(mapper::toResponse).toList();
+        List<RoomResponse> listSortAndPagingAndSearch = roomList.stream()
+                .map(room -> {
+                    RoomTypeResponseDTO roomTypeResponseDTO = new RoomTypeResponseDTO(
+                            room.getRoomType().getId(),
+                            room.getRoomType().getName(),
+                            room.getRoomType().getMaxPeople(),
+                            room.getRoomType().getDescription());
+                    return RoomResponse.builder()
+                            .id(room.getId())
+                            .name(room.getName())
+                            .roomNumber(room.getRoomNumber())
+                            .floor(room.getFloor())
+                            .roomType(roomTypeResponseDTO)
+                            .price(room.getPrice())
+                            .status(room.getStatus())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
         return listSortAndPagingAndSearch;
     }
 }

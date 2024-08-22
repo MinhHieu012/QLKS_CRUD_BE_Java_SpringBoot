@@ -8,8 +8,6 @@ import jakarta.persistence.Enumerated;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.BookingStatus;
-import vn.eledevo.vksbe.entity.Room;
-import vn.eledevo.vksbe.entity.User;
 
 @Getter
 @Setter
@@ -24,6 +22,7 @@ public class BookingResponse {
     UserDTOResponse user;
     LocalDateTime checkInDate;
     LocalDateTime checkoutDate;
+
     @Enumerated(EnumType.STRING)
     BookingStatus status;
 }
