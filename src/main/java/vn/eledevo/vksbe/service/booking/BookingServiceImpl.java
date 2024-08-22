@@ -162,12 +162,17 @@ public class BookingServiceImpl implements BookingService {
             String roomName,
             String userName,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkInDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate)
+            throws ValidationException {
         Pageable bookingPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
         List<Booking> bookingList = bookingRepository.listBookingSearchedAndPagingFromDB(
                 bookingId, userName, roomName, checkInDate, checkOutDate, bookingPageable);
+
+        if (bookingList.isEmpty()) {
+            throw new ValidationException("Trống", "Không tìm thấy lịch hẹn tương ứng!");
+        }
 
         List<BookingResponse> listSortAndPagingAndSearch = bookingList.stream()
                 .map(booking -> {
@@ -187,6 +192,8 @@ public class BookingServiceImpl implements BookingService {
                             .user(userDTO)
                             .checkInDate(booking.getCheckInDate())
                             .checkoutDate(booking.getCheckoutDate())
+                            .amount(booking.getAmount())
+                            .deposit(booking.getDeposit())
                             .status(booking.getStatus())
                             .build();
                 })

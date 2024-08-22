@@ -96,11 +96,16 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Override
     public List<RoomTypeResponse> filterRoomType(
-            String orderBy, int page, int limit, String orderedColumn, String name, String maxPeople) {
+            String orderBy, int page, int limit, String orderedColumn, String name, String maxPeople)
+            throws ValidationException {
         Pageable roomTypePageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
         List<RoomType> roomTypeList = repository.listRoomTypeSearchedAndPagingFromDB(name, maxPeople, roomTypePageable);
+
+        if (roomTypeList.isEmpty()) {
+            throw new ValidationException("Trống", "Không tìm thấy kiểu phòng tương ứng!");
+        }
 
         List<RoomTypeResponse> roomTypeResponseList =
                 roomTypeList.stream().map(mapper::toResponse).collect(Collectors.toList());

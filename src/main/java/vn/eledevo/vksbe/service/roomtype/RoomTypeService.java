@@ -16,5 +16,6 @@ public interface RoomTypeService {
     RoomTypeResponse deleteRoomType(Long id) throws ValidationException;
 
     List<RoomTypeResponse> filterRoomType(
-            String orderBy, int page, int limit, String orderedColumn, String name, String maxPeople);
+            String orderBy, int page, int limit, String orderedColumn, String name, String maxPeople)
+            throws ValidationException;
 }

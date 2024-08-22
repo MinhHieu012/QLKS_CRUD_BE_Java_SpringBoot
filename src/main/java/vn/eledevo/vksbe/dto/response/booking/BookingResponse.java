@@ -22,6 +22,8 @@ public class BookingResponse {
     UserDTOResponse user;
     LocalDateTime checkInDate;
     LocalDateTime checkoutDate;
+    String amount;
+    String deposit;
 
     @Enumerated(EnumType.STRING)
     BookingStatus status;

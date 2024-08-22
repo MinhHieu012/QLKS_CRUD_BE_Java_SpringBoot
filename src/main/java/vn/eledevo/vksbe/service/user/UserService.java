@@ -28,5 +28,6 @@ public interface UserService {
             String orderedColumn,
             String name,
             String phone,
-            String identificationNumber);
+            String identificationNumber)
+            throws ValidationException;
 }

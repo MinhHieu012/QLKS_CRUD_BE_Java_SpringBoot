@@ -57,7 +57,8 @@ public class BookingController {
             @Nullable @RequestParam("roomName") String roomName,
             @Nullable @RequestParam("userName") String userName,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkInDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime checkOutDate)
+            throws ValidationException {
         return new ApiResponse<>(
                 200,
                 "Filter booking success!",

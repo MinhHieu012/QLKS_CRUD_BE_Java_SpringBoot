@@ -24,5 +24,6 @@ public interface RoomService {
             String roomNumber,
             String floor,
             Long roomTypeId,
-            String status);
+            String status)
+            throws ValidationException;
 }

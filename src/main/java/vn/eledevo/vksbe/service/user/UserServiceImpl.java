@@ -137,12 +137,17 @@ public class UserServiceImpl implements UserService {
             String orderedColumn,
             String name,
             String phone,
-            String identificationNumber) {
+            String identificationNumber)
+            throws ValidationException {
         Pageable userPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
         List<User> userList =
                 userRepository.listUserSearchedAndPagingFromDB(name, phone, identificationNumber, userPageable);
+
+        if (userList.isEmpty()) {
+            throw new ValidationException("Trống", "Không tìm thấy user tương ứng!");
+        }
 
         List<UserResponse> listSortAndPagingAndSearch =
                 userList.stream().map(mapper::toResponse).toList();

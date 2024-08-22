@@ -48,7 +48,8 @@ public class RoomTypeController {
             @RequestParam(value = "limit", defaultValue = "2") int limit,
             @RequestParam(value = "orderedColumn", defaultValue = "name") String orderedColumn,
             @Nullable @RequestParam(value = "name") String name,
-            @Nullable @RequestParam(value = "maxPeople") String maxPeople) {
+            @Nullable @RequestParam(value = "maxPeople") String maxPeople)
+            throws ValidationException {
         return new ApiResponse<>(
                 200,
                 "Filter room type success!",

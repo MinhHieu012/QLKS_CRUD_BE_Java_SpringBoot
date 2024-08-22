@@ -129,12 +129,17 @@ public class RoomServiceImpl implements RoomService {
             String roomNumber,
             String floor,
             Long roomTypeId,
-            String status) {
+            String status)
+            throws ValidationException {
         Pageable roomPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
         List<Room> roomList =
                 repository.listRoomSearchedAndPagingFromDB(name, roomNumber, floor, roomTypeId, status, roomPageable);
+
+        if (roomList.isEmpty()) {
+            throw new ValidationException("Trống", "Không tìm thấy phòng tương ứng!");
+        }
 
         List<RoomResponse> listSortAndPagingAndSearch = roomList.stream()
                 .map(room -> {

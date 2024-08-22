@@ -53,7 +53,8 @@ public class RoomController {
             @Nullable @RequestParam("roomNumber") String roomNumber,
             @Nullable @RequestParam("floor") String floor,
             @Nullable @RequestParam("roomTypeId") Long roomTypeId,
-            @Nullable @RequestParam("status") String status) {
+            @Nullable @RequestParam("status") String status)
+            throws ValidationException {
         return new ApiResponse<>(
                 200,
                 "Filter room success!",
