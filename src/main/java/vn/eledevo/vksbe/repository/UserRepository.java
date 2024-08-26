@@ -15,6 +15,8 @@ import vn.eledevo.vksbe.entity.User;
 public interface UserRepository extends BaseRepository<User, UUID> {
     Optional<User> findByUsername(String username);
 
+    Boolean existsByPhone(String phone);
+
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);

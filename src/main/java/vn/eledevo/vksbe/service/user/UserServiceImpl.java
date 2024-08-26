@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
 import vn.eledevo.vksbe.dto.request.user.UserUpdateRequest;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getAllUser() {
-        List<User> userList = userRepository.findAll();
+        List<User> userList = userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt", "updatedAt"));
         List<UserResponse> userResponse =
                 userList.stream().map(mapper::toResponse).collect(Collectors.toList());
         return userResponse;
@@ -47,13 +48,16 @@ public class UserServiceImpl implements UserService {
     public UserResponse createUser(UserAddRequest userRequest) throws ValidationException {
 
         if (userRepository.existsByUsername(userRequest.getUsername())) {
-            throw new ValidationException("Username", USER_EXIST);
+            throw new ValidationException("username", USER_EXIST);
+        }
+        if (userRepository.existsByPhone(userRequest.getPhone())) {
+            throw new ValidationException("phone", PHONE_EXISTS);
         }
         if (userRepository.existsByEmail(userRequest.getEmail())) {
-            throw new ValidationException("Email", EMAIL_EXIST);
+            throw new ValidationException("email", EMAIL_EXIST);
         }
         if (userRepository.existsByIdentificationNumber(userRequest.getIdentificationNumber())) {
-            throw new ValidationException("Số CMND/CCCD", USER_IDENTIFICATION_NUMBER_INVALID);
+            throw new ValidationException("identificationNumber", USER_IDENTIFICATION_NUMBER_INVALID);
         }
 
         User user = mapper.toEntity(userRequest);
@@ -67,6 +71,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(userRequest.getPhone());
         user.setIdentificationNumber(userRequest.getIdentificationNumber());
         user.setDateOfBirth(userRequest.getDateOfBirth());
+        user.setRole(Role.USER);
         user.setStatus(UserStatus.ACTIVE);
 
         User userAddData = userRepository.save(user);
