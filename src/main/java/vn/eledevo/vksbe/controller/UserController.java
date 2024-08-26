@@ -19,6 +19,7 @@ import vn.eledevo.vksbe.service.user.UserService;
 
 @RestController
 @RequestMapping("/admin/quanlyuser")
+@CrossOrigin
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;

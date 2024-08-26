@@ -19,6 +19,7 @@ import vn.eledevo.vksbe.service.user.UserService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@CrossOrigin
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationController {

@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.config.security.JwtService;
+import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.TokenType;
 import vn.eledevo.vksbe.dto.request.login_register.AuthenticationRequest;
 import vn.eledevo.vksbe.dto.request.login_register.RegisterRequest;
@@ -53,7 +54,7 @@ public class AuthenticationService {
                 .identificationNumber(request.getIdentificationNumber())
                 .dateOfBirth(request.getDateOfBirth())
                 .status(request.getStatus())
-                .role(request.getRole())
+                .role(Role.ADMIN)
                 .build();
 
         // Lưu đối tượng User vào cơ sở dữ liệu

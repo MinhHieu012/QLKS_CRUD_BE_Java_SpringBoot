@@ -21,5 +21,4 @@ public class RegisterRequest {
     String identificationNumber;
     Date dateOfBirth;
     UserStatus status;
-    Role role;
 }

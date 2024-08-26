@@ -80,14 +80,18 @@ public class UserServiceImpl implements UserService {
         User user =
                 userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
 
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new ValidationException("Lỗi", "User đang bị khóa! Không thể cập nhật");
+        }
+
         if (userRepository.existsByUsername(userRequest.getUsername())) {
-            throw new ValidationException("Username", USER_EXIST);
+            throw new ValidationException("Lỗi", USER_EXIST);
         }
         if (userRepository.existsByEmail(userRequest.getEmail())) {
-            throw new ValidationException("Email", EMAIL_EXIST);
+            throw new ValidationException("Lỗi", EMAIL_EXIST);
         }
         if (userRepository.existsByIdentificationNumber(userRequest.getIdentificationNumber())) {
-            throw new ValidationException("Số CMND/CCCD", USER_IDENTIFICATION_NUMBER_INVALID);
+            throw new ValidationException("Lỗi", USER_IDENTIFICATION_NUMBER_INVALID);
         }
 
         user.setUsername(userRequest.getUsername());

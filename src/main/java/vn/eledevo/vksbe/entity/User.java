@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
@@ -43,6 +44,7 @@ public class User implements UserDetails {
     String password;
 
     @Column(name = "date_of_birth")
+    @JsonFormat(pattern = "yyyy/MM/dd")
     Date dateOfBirth;
 
     @Column(name = "identification_number", unique = true)
