@@ -86,17 +86,19 @@ public class UserServiceImpl implements UserService {
                 userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
 
         if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new ValidationException("Lỗi", "User đang bị khóa! Không thể cập nhật");
+            throw new ValidationException("locked", "User đang bị khóa! Không thể cập nhật");
         }
-
         if (userRepository.existsByUsername(userRequest.getUsername())) {
-            throw new ValidationException("Lỗi", USER_EXIST);
+            throw new ValidationException("username", USER_EXIST);
+        }
+        if (userRepository.existsByPhone(userRequest.getPhone())) {
+            throw new ValidationException("phone", PHONE_EXISTS);
         }
         if (userRepository.existsByEmail(userRequest.getEmail())) {
-            throw new ValidationException("Lỗi", EMAIL_EXIST);
+            throw new ValidationException("email", EMAIL_EXIST);
         }
         if (userRepository.existsByIdentificationNumber(userRequest.getIdentificationNumber())) {
-            throw new ValidationException("Lỗi", USER_IDENTIFICATION_NUMBER_INVALID);
+            throw new ValidationException("identificationNumber", USER_IDENTIFICATION_NUMBER_INVALID);
         }
 
         user.setUsername(userRequest.getUsername());
@@ -115,7 +117,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse lockUser(UUID uuid) throws ValidationException {
         User user =
-                userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
+                userRepository.findById(uuid).orElseThrow(() -> new ValidationException("error", "User not found!"));
         user.setStatus(UserStatus.LOCKED);
         User userLockResult = userRepository.save(user);
         return mapper.toResponse(userLockResult);

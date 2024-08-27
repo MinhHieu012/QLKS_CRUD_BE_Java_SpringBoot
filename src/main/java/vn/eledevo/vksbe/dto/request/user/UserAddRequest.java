@@ -17,7 +17,6 @@ import vn.eledevo.vksbe.constant.ResponseMessage;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class UserAddRequest {
-    @NotBlank(message = ResponseMessage.USER_BLANK)
     @Size(min = 3, max = 50, message = ResponseMessage.USER_SIZE)
     String username;
 
