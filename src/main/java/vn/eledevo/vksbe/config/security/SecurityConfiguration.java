@@ -15,13 +15,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
+@CrossOrigin(origins = "http://localhost:4200")
 public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {
@@ -57,6 +62,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URL)
                         .permitAll()
                         .requestMatchers("/api/v1/private/**", "/api/v1/public/**")
@@ -94,6 +100,21 @@ public class SecurityConfiguration {
                         // SecurityContextHolder
                         );
         return http.build();
+    }
+
+    // Cấu hình CORS cho phép từ http://localhost:4200
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:4200"); // Cấu hình nguồn gốc (Origin) được phép
+        configuration.addAllowedMethod("*"); // Cho phép tất cả các phương thức HTTP
+        configuration.addAllowedHeader("*"); // Cho phép tất cả các header
+        configuration.setAllowCredentials(true); // Cho phép gửi cookie hoặc các thông tin đăng nhập
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Áp dụng cấu hình này cho tất cả các URL
+
+        return source;
     }
 
     @Bean

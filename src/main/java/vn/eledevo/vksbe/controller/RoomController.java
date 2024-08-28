@@ -15,6 +15,7 @@ import vn.eledevo.vksbe.service.room.RoomService;
 @RestController
 @RequestMapping("/admin/quanlyphong")
 @RequiredArgsConstructor
+@CrossOrigin
 public class RoomController {
     private final RoomService service;
 

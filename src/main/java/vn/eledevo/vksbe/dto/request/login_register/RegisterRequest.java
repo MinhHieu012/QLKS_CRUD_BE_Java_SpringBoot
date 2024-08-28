@@ -4,7 +4,6 @@ import java.util.Date;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
 
 @Setter

@@ -2,10 +2,11 @@ package vn.eledevo.vksbe.dto.request.user;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
