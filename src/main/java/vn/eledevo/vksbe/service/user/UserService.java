@@ -3,6 +3,7 @@ package vn.eledevo.vksbe.service.user;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
 import vn.eledevo.vksbe.dto.request.user.UserUpdateRequest;
 import vn.eledevo.vksbe.dto.response.user.UserResponse;
@@ -21,7 +22,7 @@ public interface UserService {
 
     List<UserResponse> searchUser(String name, String phone, String identificationNumber);
 
-    List<UserResponse> sortAndPagingAndSearch(
+    Page<UserResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,
             int limit,

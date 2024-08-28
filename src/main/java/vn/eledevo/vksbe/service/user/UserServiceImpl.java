@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -141,7 +142,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> sortAndPagingAndSearch(
+    public Page<UserResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,
             int limit,
@@ -153,15 +154,9 @@ public class UserServiceImpl implements UserService {
         Pageable userPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
-        List<User> userList =
+        Page<User> userList =
                 userRepository.listUserSearchedAndPagingFromDB(name, phone, identificationNumber, userPageable);
 
-        if (userList.isEmpty()) {
-            throw new ValidationException("Trống", "Không tìm thấy user tương ứng!");
-        }
-
-        List<UserResponse> listSortAndPagingAndSearch =
-                userList.stream().map(mapper::toResponse).toList();
-        return listSortAndPagingAndSearch;
+        return userList.map(mapper::toResponse);
     }
 }
