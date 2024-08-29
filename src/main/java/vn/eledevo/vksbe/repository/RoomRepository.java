@@ -13,7 +13,7 @@ import vn.eledevo.vksbe.entity.Room;
 public interface RoomRepository extends JpaRepository<Room, Integer> {
     Boolean existsByRoomNumber(String roomNumber);
 
-    Optional<Room> findRoomByName(String roomName);
+    Boolean existsByRoomTypeId(Long roomTypeId);
 
     @Query("SELECT r FROM Room r "
             + "WHERE (:name IS NULL OR r.name LIKE %:name%) "

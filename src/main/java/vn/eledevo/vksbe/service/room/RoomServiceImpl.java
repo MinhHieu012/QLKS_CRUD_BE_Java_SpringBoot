@@ -38,7 +38,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomResponse> getAllRoom() {
-        List<Room> roomListFromDB = repository.findAll();
+        List<Room> roomListFromDB = repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt", "updatedAt"));
         List<RoomResponse> roomListUserReceived =
                 roomListFromDB.stream().map(mapper::toResponse).collect(Collectors.toList());
         return roomListUserReceived;
@@ -46,8 +46,12 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomResponse addRoom(RoomRequest roomRequest) throws ValidationException {
-        if (repository.existsByRoomNumber(roomRequest.getRoomNumber())) {
-            throw new ValidationException("Số phòng này", "đã tồn tại");
+        if (repository.existsByRoomNumber(String.valueOf(roomRequest.getRoomNumber()))) {
+            throw new ValidationException("roomNumber", "Số phòng này đã tồn tại!");
+        }
+
+        if (repository.existsByRoomTypeId(roomRequest.getRoomTypeId())) {
+            throw new ValidationException("roomTypeExist", "Loại phòng này đã được sử dụng!");
         }
 
         User userUUID = new User();
@@ -55,7 +59,7 @@ public class RoomServiceImpl implements RoomService {
 
         Optional<RoomType> roomTypeFromDB = roomTypeRepository.findById(roomRequest.getRoomTypeId());
         if (roomTypeFromDB.isEmpty()) {
-            throw new ValidationException("Lỗi", "Phòng bạn chọn không tồn tại");
+            throw new ValidationException("roomTypeExist", "Loại phòng bạn chọn không tồn tại!");
         }
         RoomType roomtype = roomTypeFromDB.get();
 
@@ -75,7 +79,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomResponse updateRoom(Integer id, RoomRequest roomRequest) throws ValidationException {
         Room room = repository.findById(id).orElseThrow(() -> new ValidationException("Error", "Room not found!"));
 
-        if (repository.existsByRoomNumber(roomRequest.getRoomNumber())) {
+        if (repository.existsByRoomNumber(String.valueOf(roomRequest.getRoomNumber()))) {
             throw new ValidationException("Lỗi", "Số phòng này đã tồn tại");
         }
 
@@ -84,17 +88,17 @@ public class RoomServiceImpl implements RoomService {
 
         Optional<RoomType> roomTypeFromDB = roomTypeRepository.findById(roomRequest.getRoomTypeId());
         if (roomTypeFromDB.isEmpty()) {
-            throw new ValidationException("Lỗi", "Phòng bạn chọn không tồn tại");
+            throw new ValidationException("Lỗi", "Loại phòng bạn chọn không tồn tại");
         }
         RoomType roomtype = roomTypeFromDB.get();
 
         room.setUser(userUUID);
         room.setRoomType(roomtype);
         room.setName(roomRequest.getName());
-        room.setRoomNumber(roomRequest.getRoomNumber());
-        room.setFloor(roomRequest.getFloor());
+        room.setRoomNumber(String.valueOf(roomRequest.getRoomNumber()));
+        room.setFloor(String.valueOf(roomRequest.getFloor()));
         room.setDescription(roomRequest.getDescription());
-        room.setPrice(roomRequest.getPrice());
+        room.setPrice(String.valueOf(roomRequest.getPrice()));
         room.setStatus(RoomStatus.valueOf(roomRequest.getStatus()));
 
         Room roomUpdateData = repository.save(room);

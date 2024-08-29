@@ -10,10 +10,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class RoomRequest {
     String name;
-    String roomNumber;
-    String floor;
+    Integer roomNumber;
+    Integer floor;
     Long roomTypeId;
     String description;
-    String price;
+    Integer price;
     String status;
 }
