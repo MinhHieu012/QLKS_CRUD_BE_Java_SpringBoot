@@ -82,6 +82,9 @@ public class RoomServiceImpl implements RoomService {
         if (repository.existsByRoomNumber(String.valueOf(roomRequest.getRoomNumber()))) {
             throw new ValidationException("Lỗi", "Số phòng này đã tồn tại");
         }
+        if (repository.existsByRoomTypeId(roomRequest.getRoomTypeId())) {
+            throw new ValidationException("roomTypeExist", "Loại phòng này đã được sử dụng!");
+        }
 
         User userUUID = new User();
         userUUID.setId(SecurityUtils.getUserId());
