@@ -148,16 +148,12 @@ public class RoomServiceImpl implements RoomService {
             try {
                 roomStatus = RoomStatus.valueOf(status);
             } catch (IllegalArgumentException e) {
-                throw new ValidationException("ERROR", "Không tìm thấy trạng thái phòng tương ứng!");
+                throw new ValidationException("roomTypeNotFound", "Không tìm thấy trạng thái phòng tương ứng!");
             }
         }
 
         Page<Room> roomList = repository.listRoomSearchedAndPagingFromDB(
                 name, roomNumber, floor, roomTypeId, roomStatus, roomPageable);
-
-        if (roomList.isEmpty()) {
-            throw new ValidationException("Trống", "Không tìm thấy phòng tương ứng!");
-        }
 
         return roomList.map(mapper::toResponse);
     }
