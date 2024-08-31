@@ -48,7 +48,7 @@ public class RoomController {
     public ApiResponse sortAndPagingAndSearch(
             @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "2") int limit,
+            @RequestParam(value = "limit", defaultValue = "5") int limit,
             @RequestParam(value = "orderedColumn", defaultValue = "name") String orderedColumn,
             @Nullable @RequestParam("name") String name,
             @Nullable @RequestParam("roomNumber") String roomNumber,

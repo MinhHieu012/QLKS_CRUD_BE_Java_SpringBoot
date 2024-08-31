@@ -2,6 +2,8 @@ package vn.eledevo.vksbe.service.room;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import vn.eledevo.vksbe.dto.request.room.RoomRequest;
 import vn.eledevo.vksbe.dto.response.room.RoomResponse;
 import vn.eledevo.vksbe.exception.ValidationException;
@@ -15,7 +17,7 @@ public interface RoomService {
 
     RoomResponse updateRoomStatus(Integer id, String status) throws ValidationException;
 
-    List<RoomResponse> sortAndPagingAndSearch(
+    Page<RoomResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,
             int limit,

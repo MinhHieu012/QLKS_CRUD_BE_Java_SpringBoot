@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.annotation.Nullable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,7 +17,6 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.RoomStatus;
 import vn.eledevo.vksbe.dto.request.room.RoomRequest;
 import vn.eledevo.vksbe.dto.response.room.RoomResponse;
-import vn.eledevo.vksbe.dto.response.roomtype.RoomTypeResponseDTO;
 import vn.eledevo.vksbe.entity.Room;
 import vn.eledevo.vksbe.entity.RoomType;
 import vn.eledevo.vksbe.entity.User;
@@ -127,7 +128,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomResponse> sortAndPagingAndSearch(
+    public Page<RoomResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,
             int limit,
@@ -141,32 +142,23 @@ public class RoomServiceImpl implements RoomService {
         Pageable roomPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
-        List<Room> roomList =
-                repository.listRoomSearchedAndPagingFromDB(name, roomNumber, floor, roomTypeId, status, roomPageable);
+
+        RoomStatus roomStatus = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                roomStatus = RoomStatus.valueOf(status);
+            } catch (IllegalArgumentException e) {
+                throw new ValidationException("ERROR", "Không tìm thấy trạng thái phòng tương ứng!");
+            }
+        }
+
+        Page<Room> roomList = repository.listRoomSearchedAndPagingFromDB(
+                name, roomNumber, floor, roomTypeId, roomStatus, roomPageable);
 
         if (roomList.isEmpty()) {
             throw new ValidationException("Trống", "Không tìm thấy phòng tương ứng!");
         }
 
-        List<RoomResponse> listSortAndPagingAndSearch = roomList.stream()
-                .map(room -> {
-                    RoomTypeResponseDTO roomTypeResponseDTO = new RoomTypeResponseDTO(
-                            room.getRoomType().getId(),
-                            room.getRoomType().getName(),
-                            room.getRoomType().getMaxPeople(),
-                            room.getRoomType().getDescription());
-                    return RoomResponse.builder()
-                            .id(room.getId())
-                            .name(room.getName())
-                            .roomNumber(room.getRoomNumber())
-                            .floor(room.getFloor())
-                            .roomType(roomTypeResponseDTO)
-                            .price(room.getPrice())
-                            .status(room.getStatus())
-                            .build();
-                })
-                .collect(Collectors.toList());
-
-        return listSortAndPagingAndSearch;
+        return roomList.map(mapper::toResponse);
     }
 }
