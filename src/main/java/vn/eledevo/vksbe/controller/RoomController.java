@@ -46,10 +46,10 @@ public class RoomController {
 
     @GetMapping("/filter")
     public ApiResponse sortAndPagingAndSearch(
-            @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
+            @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "limit", defaultValue = "5") int limit,
-            @RequestParam(value = "orderedColumn", defaultValue = "name") String orderedColumn,
+            @RequestParam(value = "orderedColumn", defaultValue = "createdAt") String orderedColumn,
             @Nullable @RequestParam("name") String name,
             @Nullable @RequestParam("roomNumber") String roomNumber,
             @Nullable @RequestParam("floor") String floor,

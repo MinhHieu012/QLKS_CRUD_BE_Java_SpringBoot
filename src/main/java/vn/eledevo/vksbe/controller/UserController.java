@@ -65,10 +65,10 @@ public class UserController {
 
     @GetMapping("/filter")
     public ApiResponse sortAndPagingAndSearch(
-            @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
+            @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "limit", defaultValue = "5") int limit,
-            @RequestParam(value = "orderedColumn", defaultValue = "username") String orderedColumn,
+            @RequestParam(value = "orderedColumn", defaultValue = "createdAt") String orderedColumn,
             @Nullable @RequestParam("username") String username,
             @Nullable @RequestParam("phone") String phone,
             @Nullable @RequestParam("identificationNumber") String identificationNumber)

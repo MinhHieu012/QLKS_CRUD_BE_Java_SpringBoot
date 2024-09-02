@@ -44,10 +44,10 @@ public class RoomTypeController {
 
     @GetMapping("/filter")
     public ApiResponse filterRoomType(
-            @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
+            @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "2") int limit,
-            @RequestParam(value = "orderedColumn", defaultValue = "name") String orderedColumn,
+            @RequestParam(value = "limit", defaultValue = "5") int limit,
+            @RequestParam(value = "orderedColumn", defaultValue = "createdAt") String orderedColumn,
             @Nullable @RequestParam(value = "name") String name,
             @Nullable @RequestParam(value = "maxPeople") String maxPeople)
             throws ValidationException {

@@ -14,7 +14,7 @@ public class RoomTypeRequest {
     String name;
 
     @Pattern(regexp = "[0-9]*$", message = "Trường này chỉ nhận giá trị số!")
-    String maxPeople;
+    Integer maxPeople;
 
     String description;
 }

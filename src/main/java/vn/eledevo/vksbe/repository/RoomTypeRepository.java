@@ -1,7 +1,6 @@
 package vn.eledevo.vksbe.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +16,6 @@ public interface RoomTypeRepository extends BaseRepository<RoomType, Long> {
 
     @Query("SELECT rt FROM RoomType rt " + "WHERE (:name IS NULL OR rt.name LIKE %:name%) "
             + "AND (:maxPeople IS NULL OR rt.maxPeople LIKE %:maxPeople%)")
-    List<RoomType> listRoomTypeSearchedAndPagingFromDB(
+    Page<RoomType> listRoomTypeSearchedAndPagingFromDB(
             @Param("name") String name, @Param("maxPeople") String maxPeople, Pageable pageable);
 }

@@ -1,5 +1,7 @@
 package vn.eledevo.vksbe.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
@@ -29,10 +31,24 @@ public class RoomType {
 
     String description;
 
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+
+    @PrePersist
+    void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
 
-    @OneToOne(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "roomType", cascade = CascadeType.ALL)
     Room room;
 }

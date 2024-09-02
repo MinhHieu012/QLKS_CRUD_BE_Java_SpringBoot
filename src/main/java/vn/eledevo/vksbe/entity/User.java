@@ -85,7 +85,7 @@ public class User implements UserDetails {
     // Liên kết với Entity Token
     List<Token> Tokens;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<RoomType> RoomTypes;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
