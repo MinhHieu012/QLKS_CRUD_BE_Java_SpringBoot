@@ -95,7 +95,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 repository.findById(id).orElseThrow(() -> new ValidationException("Room type", "Room type not found!"));
 
         if (roomRepository.existsByRoomTypeId(id)) {
-            throw new ValidationException("errorDelete", "Loại phòng này đang được sử dụng! Không thể xóa!");
+            throw new ValidationException("errorDelete", "Loại phòng này đang được sử dụng!");
         }
 
         repository.deleteById(id);
