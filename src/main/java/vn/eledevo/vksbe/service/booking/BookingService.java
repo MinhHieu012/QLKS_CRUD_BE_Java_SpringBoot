@@ -3,6 +3,7 @@ package vn.eledevo.vksbe.service.booking;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import vn.eledevo.vksbe.dto.request.booking.BookingRequest;
@@ -19,7 +20,7 @@ public interface BookingService {
 
     BookingResponse cancelBooking(Long id) throws ValidationException;
 
-    List<BookingResponse> sortAndPagingAndSearch(
+    Page<BookingResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,
             int limit,

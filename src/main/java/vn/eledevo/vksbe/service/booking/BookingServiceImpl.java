@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -153,7 +154,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponse> sortAndPagingAndSearch(
+    public Page<BookingResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,
             int limit,
@@ -167,38 +168,9 @@ public class BookingServiceImpl implements BookingService {
         Pageable bookingPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
-        List<Booking> bookingList = bookingRepository.listBookingSearchedAndPagingFromDB(
+        Page<Booking> bookingList = bookingRepository.listBookingSearchedAndPagingFromDB(
                 bookingId, userName, roomName, checkInDate, checkOutDate, bookingPageable);
 
-        if (bookingList.isEmpty()) {
-            throw new ValidationException("Trống", "Không tìm thấy lịch hẹn tương ứng!");
-        }
-
-        List<BookingResponse> listSortAndPagingAndSearch = bookingList.stream()
-                .map(booking -> {
-                    RoomDTOResponse roomDTO = new RoomDTOResponse(
-                            booking.getRoom().getId(),
-                            booking.getRoom().getName(),
-                            booking.getRoom().getRoomNumber(),
-                            booking.getRoom().getFloor(),
-                            booking.getRoom().getPrice());
-                    UserDTOResponse userDTO = new UserDTOResponse(
-                            booking.getUser().getId(),
-                            booking.getUser().getUsername(),
-                            booking.getUser().getPhone());
-                    return BookingResponse.builder()
-                            .id(booking.getId())
-                            .room(roomDTO)
-                            .user(userDTO)
-                            .checkInDate(booking.getCheckInDate())
-                            .checkoutDate(booking.getCheckoutDate())
-                            .amount(booking.getAmount())
-                            .deposit(booking.getDeposit())
-                            .status(booking.getStatus())
-                            .build();
-                })
-                .collect(Collectors.toList());
-
-        return listSortAndPagingAndSearch;
+        return bookingList.map(mapper::toResponse);
     }
 }
