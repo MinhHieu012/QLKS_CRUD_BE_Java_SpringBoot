@@ -50,6 +50,8 @@ public class SecurityConfiguration {
         "admin/quanlyphong",
         "admin/quanlyphong/search**",
         "admin/quanlyphong/filter**",
+        "admin/quanlydatphong",
+        "admin/quanlydatphong/lich/**",
         "admin/quanlydatphong/add",
         "admin/quanlydatphong/search**",
         "admin/quanlydatphong/filter**",

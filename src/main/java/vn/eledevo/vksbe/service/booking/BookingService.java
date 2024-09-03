@@ -2,6 +2,7 @@ package vn.eledevo.vksbe.service.booking;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +14,8 @@ import vn.eledevo.vksbe.exception.ValidationException;
 
 public interface BookingService {
     List<BookingResponse> getAllBookings();
+
+    Optional<BookingResponse> getBookingById(Long id);
 
     BookingResponse addBooking(BookingRequest bookingRequest) throws ValidationException;
 

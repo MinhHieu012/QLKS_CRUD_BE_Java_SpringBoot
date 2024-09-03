@@ -5,7 +5,6 @@ import static vn.eledevo.vksbe.constant.ResponseMessage.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +20,6 @@ import vn.eledevo.vksbe.constant.BookingStatus;
 import vn.eledevo.vksbe.dto.request.booking.BookingRequest;
 import vn.eledevo.vksbe.dto.request.booking.BookingUpdateRequest;
 import vn.eledevo.vksbe.dto.response.booking.BookingResponse;
-import vn.eledevo.vksbe.dto.response.booking.RoomDTOResponse;
-import vn.eledevo.vksbe.dto.response.booking.UserDTOResponse;
 import vn.eledevo.vksbe.entity.Booking;
 import vn.eledevo.vksbe.entity.Room;
 import vn.eledevo.vksbe.entity.User;
@@ -49,6 +46,12 @@ public class BookingServiceImpl implements BookingService {
         List<BookingResponse> bookingListToFE =
                 bookingListFromDB.stream().map(mapper::toResponse).toList();
         return bookingListToFE;
+    }
+
+    @Override
+    public Optional<BookingResponse> getBookingById(Long id) {
+        Optional<Booking> booking = bookingRepository.findById(id);
+        return booking.map(mapper::toResponse);
     }
 
     @Override

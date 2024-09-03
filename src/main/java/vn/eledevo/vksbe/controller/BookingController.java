@@ -27,6 +27,11 @@ public class BookingController {
         return new ApiResponse<>(200, "Get all booking success!", bookingService.getAllBookings());
     }
 
+    @GetMapping("/lich/{id}")
+    public ApiResponse getBookingById(@PathVariable Long id) {
+        return new ApiResponse<>(200, "Get booking success!", bookingService.getBookingById(id));
+    }
+
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse addBooking(@RequestBody BookingRequest bookingRequest) throws ValidationException {
