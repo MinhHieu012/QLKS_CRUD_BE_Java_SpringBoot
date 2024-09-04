@@ -113,7 +113,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomResponse updateRoomStatus(Integer id, String status) throws ValidationException {
-        Room room = repository.findById(id).orElseThrow(() -> new ValidationException("Room", "Room not found!"));
+        Room room = repository.findById(id).orElseThrow(() -> new ValidationException("roomExists", "Room not found!"));
 
         User userUUID = new User();
         userUUID.setId(SecurityUtils.getUserId());

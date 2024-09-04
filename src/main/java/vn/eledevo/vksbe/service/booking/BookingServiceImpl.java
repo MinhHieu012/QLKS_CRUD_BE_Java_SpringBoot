@@ -157,6 +157,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public BookingResponse updateBookingStatus(Long id, String status) throws ValidationException {
+        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new ValidationException("bookingExists", "Không tìm thấy lịch đặt tương ứng!"));
+        booking.setStatus(BookingStatus.valueOf(status));
+        Booking bookingStatusData = bookingRepository.save(booking);
+        return mapper.toResponse(bookingStatusData);
+    }
+
+    @Override
     public Page<BookingResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,

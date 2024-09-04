@@ -52,6 +52,13 @@ public class BookingController {
         return new ApiResponse<>(204, "Cancel booking success!", bookingService.cancelBooking(id));
     }
 
+    @PutMapping("/bookingstatus/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse updateBookingStatus(@PathVariable Long id, @RequestParam String status)
+            throws ValidationException {
+        return new ApiResponse<>(204, "Update booking status success!", bookingService.updateBookingStatus(id, status));
+    }
+
     @GetMapping("/filter")
     public ApiResponse sortAndPagingAndSearch(
             @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
