@@ -59,28 +59,28 @@ public class BookingServiceImpl implements BookingService {
 
         if (bookingRepository.validateSameBooking(
                 bookingRequest.getRoomId(), bookingRequest.getCheckInDate(), bookingRequest.getCheckoutDate())) {
-            throw new ValidationException("Lỗi", BOOKING_EXISTS);
+            throw new ValidationException("bookingExists", BOOKING_EXISTS);
         }
 
         if (bookingRepository.validateOnRangeBooking(
                 bookingRequest.getRoomId(), bookingRequest.getCheckInDate(), bookingRequest.getCheckoutDate())) {
-            throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE);
+            throw new ValidationException("bookingExistsInRange", BOOKING_EXISTS_IN_RANGE);
         }
 
         if (bookingRepository.validateRange1HourBooking(
                 bookingRequest.getRoomId(), bookingRequest.getCheckInDate().minusHours(1))) {
-            throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE_1H);
+            throw new ValidationException("bookingExistsInRange1H", BOOKING_EXISTS_IN_RANGE_1H);
         }
 
         Optional<Room> roomDataFromDB = roomRepository.findById(bookingRequest.getRoomId());
         if (roomDataFromDB.isEmpty()) {
-            throw new ValidationException("Lỗi", "Phòng bạn chọn không tồn tại");
+            throw new ValidationException("roomExists", "Phòng bạn chọn không tồn tại");
         }
         Room room = roomDataFromDB.get();
 
         Optional<User> userDataFromDB = userRepository.findById(bookingRequest.getUserId());
         if (userDataFromDB.isEmpty()) {
-            throw new ValidationException("Lỗi", "Người dùng không tồn tại");
+            throw new ValidationException("userExists", "Người dùng không tồn tại");
         }
         User user = userDataFromDB.get();
 
@@ -107,31 +107,31 @@ public class BookingServiceImpl implements BookingService {
                 bookingUpdateRequest.getRoomId(),
                 bookingUpdateRequest.getCheckInDate(),
                 bookingUpdateRequest.getCheckoutDate())) {
-            throw new ValidationException("Lỗi", BOOKING_EXISTS);
+            throw new ValidationException("bookingExists", BOOKING_EXISTS);
         }
 
         if (bookingRepository.validateOnRangeBooking(
                 bookingUpdateRequest.getRoomId(),
                 bookingUpdateRequest.getCheckInDate(),
                 bookingUpdateRequest.getCheckoutDate())) {
-            throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE);
+            throw new ValidationException("bookingExistsInRange", BOOKING_EXISTS_IN_RANGE);
         }
 
         if (bookingRepository.validateRange1HourBooking(
                 bookingUpdateRequest.getRoomId(),
                 bookingUpdateRequest.getCheckInDate().minusHours(1))) {
-            throw new ValidationException("Lỗi", BOOKING_EXISTS_IN_RANGE_1H);
+            throw new ValidationException("bookingExistsInRange1H", BOOKING_EXISTS_IN_RANGE_1H);
         }
 
         Optional<Room> roomDataFromDB = roomRepository.findById(bookingUpdateRequest.getRoomId());
         if (roomDataFromDB.isEmpty()) {
-            throw new ValidationException("Lỗi", "Phòng bạn chọn không tồn tại");
+            throw new ValidationException("roomExists", "Phòng bạn chọn không tồn tại");
         }
         Room roomUpdateSaveToEntity = roomDataFromDB.get();
 
         Optional<User> userDataFromDB = userRepository.findById(bookingUpdateRequest.getUserId());
         if (userDataFromDB.isEmpty()) {
-            throw new ValidationException("Lỗi", "Người dùng không tồn tại");
+            throw new ValidationException("userExists", "Người dùng không tồn tại");
         }
         User userUpdateDataSaveToEntity = userDataFromDB.get();
 
