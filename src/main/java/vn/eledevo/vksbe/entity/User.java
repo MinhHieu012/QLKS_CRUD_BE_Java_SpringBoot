@@ -21,6 +21,7 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.exception.UserAccountLockedException;
+import vn.eledevo.vksbe.exception.ValidationException;
 
 @Entity
 @Getter
@@ -118,8 +119,8 @@ public class User implements UserDetails {
     public boolean isAccountNonLocked() {
         if (UserStatus.LOCKED.equals(status)) {
             try {
-                throw new UserAccountLockedException("Your account has been locked!");
-            } catch (UserAccountLockedException e) {
+                throw new ValidationException("lockedAccount", "Tài khoản của bạn đã bị khóa!");
+            } catch (ValidationException e) {
                 throw new RuntimeException(e);
             }
         } else {
