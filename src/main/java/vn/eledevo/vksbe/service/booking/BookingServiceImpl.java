@@ -145,6 +145,10 @@ public class BookingServiceImpl implements BookingService {
 
         booking.setRoom(roomUpdateSaveToEntity);
         booking.setUser(userUpdateDataSaveToEntity);
+        booking.setCheckInDate(bookingUpdateRequest.getCheckInDate());
+        booking.setCheckoutDate(bookingUpdateRequest.getCheckoutDate());
+        booking.setDeposit(bookingUpdateRequest.getDeposit());
+        booking.setAmount(bookingUpdateRequest.getAmount());
         booking.setStatus(bookingUpdateRequest.getStatus());
 
         Booking bookingUpdateData = bookingRepository.save(booking);
