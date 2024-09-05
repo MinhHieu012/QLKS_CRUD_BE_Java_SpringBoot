@@ -84,6 +84,10 @@ public class BookingServiceImpl implements BookingService {
         }
         User user = userDataFromDB.get();
 
+        if (bookingRequest.getCheckInDate().isAfter(bookingRequest.getCheckoutDate())) {
+            throw new ValidationException("bookingInValid", "Ngày check-out phải lớn hơn ngày check-in!");
+        }
+
         Booking booking = mapper.toEntity(bookingRequest);
         booking.setRoom(room);
         booking.setUser(user);
@@ -134,6 +138,10 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("userExists", "Người dùng không tồn tại");
         }
         User userUpdateDataSaveToEntity = userDataFromDB.get();
+
+        if (bookingUpdateRequest.getCheckInDate().isAfter(bookingUpdateRequest.getCheckoutDate())) {
+            throw new ValidationException("bookingInValid", "Ngày check-out phải lớn hơn ngày check-in!");
+        }
 
         booking.setRoom(roomUpdateSaveToEntity);
         booking.setUser(userUpdateDataSaveToEntity);
