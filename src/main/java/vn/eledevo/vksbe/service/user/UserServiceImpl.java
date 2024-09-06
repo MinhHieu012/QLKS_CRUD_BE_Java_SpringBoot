@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getAllUser() {
-        List<User> userList = userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt", "updatedAt"));
+        List<User> userList = userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         List<UserResponse> userResponse =
                 userList.stream().map(mapper::toResponse).collect(Collectors.toList());
         return userResponse;

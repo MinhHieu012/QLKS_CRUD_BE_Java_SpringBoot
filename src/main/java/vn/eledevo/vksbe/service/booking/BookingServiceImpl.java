@@ -76,6 +76,11 @@ public class BookingServiceImpl implements BookingService {
         if (roomDataFromDB.isEmpty()) {
             throw new ValidationException("roomExists", "Phòng bạn chọn không tồn tại");
         }
+        // So sánh trạng thái phòng bằng .equals()
+        String roomStatus = String.valueOf(roomDataFromDB.get().getStatus());
+        if (roomStatus.equals("LOCK") || roomStatus.equals("CLEANING") || roomStatus.equals("USING")) {
+            throw new ValidationException("inValidRoomStatusBooking", "Phòng này hiện đang bận hoặc đang được sử dụng! Vui lòng chọn phòng khác");
+        }
         Room room = roomDataFromDB.get();
 
         Optional<User> userDataFromDB = userRepository.findById(bookingRequest.getUserId());
@@ -106,6 +111,19 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository
                 .findById(id)
                 .orElseThrow(() -> new ValidationException("Booking", "Booking not found!"));
+
+        Optional<Room> room = roomRepository.findById(bookingUpdateRequest.getRoomId());
+
+        // Kiểm tra nếu phòng tồn tại trước khi lấy ra
+        if (room.isEmpty()) {
+            throw new ValidationException("roomNotFound", "Phòng bạn chọn không tồn tại!");
+        }
+
+        // So sánh trạng thái phòng bằng .equals()
+        String roomStatus = String.valueOf(room.get().getStatus());
+        if (roomStatus.equals("LOCK") || roomStatus.equals("CLEANING") || roomStatus.equals("USING")) {
+            throw new ValidationException("inValidRoomStatusBooking", "Phòng này hiện đang bận hoặc đang được sử dụng! Vui lòng chọn phòng khác");
+        }
 
         if (bookingRepository.validateSameBooking(
                 bookingUpdateRequest.getRoomId(),
