@@ -2,5 +2,7 @@ package vn.eledevo.vksbe.constant;
 
 public enum UserStatus {
     ACTIVE,
-    LOCKED
+    LOCKED,
+    LOGGED_IN,
+    LOGGED_OUT
 }

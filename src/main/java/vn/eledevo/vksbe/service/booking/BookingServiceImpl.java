@@ -79,7 +79,9 @@ public class BookingServiceImpl implements BookingService {
         // So sánh trạng thái phòng bằng .equals()
         String roomStatus = String.valueOf(roomDataFromDB.get().getStatus());
         if (roomStatus.equals("LOCK") || roomStatus.equals("CLEANING") || roomStatus.equals("USING")) {
-            throw new ValidationException("inValidRoomStatusBooking", "Phòng này hiện đang bận hoặc đang được sử dụng! Vui lòng chọn phòng khác");
+            throw new ValidationException(
+                    "inValidRoomStatusBooking",
+                    "Phòng này hiện đang bận hoặc đang được sử dụng! Vui lòng chọn phòng khác");
         }
         Room room = roomDataFromDB.get();
 
@@ -122,7 +124,9 @@ public class BookingServiceImpl implements BookingService {
         // So sánh trạng thái phòng bằng .equals()
         String roomStatus = String.valueOf(room.get().getStatus());
         if (roomStatus.equals("LOCK") || roomStatus.equals("CLEANING") || roomStatus.equals("USING")) {
-            throw new ValidationException("inValidRoomStatusBooking", "Phòng này hiện đang bận hoặc đang được sử dụng! Vui lòng chọn phòng khác");
+            throw new ValidationException(
+                    "inValidRoomStatusBooking",
+                    "Phòng này hiện đang bận hoặc đang được sử dụng! Vui lòng chọn phòng khác");
         }
 
         if (bookingRepository.validateSameBooking(
@@ -188,7 +192,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponse updateBookingStatus(Long id, String status) throws ValidationException {
-        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new ValidationException("bookingExists", "Không tìm thấy lịch đặt tương ứng!"));
+        Booking booking = bookingRepository
+                .findById(id)
+                .orElseThrow(() -> new ValidationException("bookingExists", "Không tìm thấy lịch đặt tương ứng!"));
         booking.setStatus(BookingStatus.valueOf(status));
         Booking bookingStatusData = bookingRepository.save(booking);
         return mapper.toResponse(bookingStatusData);

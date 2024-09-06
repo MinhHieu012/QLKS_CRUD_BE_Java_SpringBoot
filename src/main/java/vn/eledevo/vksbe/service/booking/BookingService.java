@@ -10,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import vn.eledevo.vksbe.dto.request.booking.BookingRequest;
 import vn.eledevo.vksbe.dto.request.booking.BookingUpdateRequest;
 import vn.eledevo.vksbe.dto.response.booking.BookingResponse;
-import vn.eledevo.vksbe.dto.response.room.RoomResponse;
 import vn.eledevo.vksbe.exception.ValidationException;
 
 public interface BookingService {
