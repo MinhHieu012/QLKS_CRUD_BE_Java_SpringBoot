@@ -19,11 +19,13 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.config.security.JwtService;
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.TokenType;
+import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.dto.request.login_register.AuthenticationRequest;
 import vn.eledevo.vksbe.dto.request.login_register.RegisterRequest;
 import vn.eledevo.vksbe.dto.response.AuthenticationResponse;
 import vn.eledevo.vksbe.entity.Token;
 import vn.eledevo.vksbe.entity.User;
+import vn.eledevo.vksbe.exception.ValidationException;
 import vn.eledevo.vksbe.repository.TokenRepository;
 import vn.eledevo.vksbe.repository.UserRepository;
 
@@ -80,14 +82,18 @@ public class AuthenticationService {
      * @param request Đối tượng AuthenticationRequest chứa thông tin xác thực
      * @return Đối tượng AuthenticationResponse chứa token truy cập và token làm mới
      */
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws ValidationException {
+
+        // Tìm đối tượng User tương ứng với email
+        var user = repository.findByUsername(request.getUsername()).orElseThrow();
+
+        if (user.getStatus() == UserStatus.LOCKED) {
+            throw new ValidationException("lockedAccount", "Tài khoản của bạn đã bị khóa!");
+        }
 
         // Xác thực thông tin đăng nhập của người dùng
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
-        // Tìm đối tượng User tương ứng với email
-        var user = repository.findByUsername(request.getUsername()).orElseThrow();
 
         // Tạo token truy cập và token làm mới cho người dùng
         var jwtToken = jwtService.generateToken(user);

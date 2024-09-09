@@ -5,7 +5,6 @@ import static vn.eledevo.vksbe.constant.ErrorCode.FIELD_INVALID;
 import static vn.eledevo.vksbe.constant.ErrorCode.METHOD_ERROR;
 
 import java.lang.reflect.UndeclaredThrowableException;
-import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 

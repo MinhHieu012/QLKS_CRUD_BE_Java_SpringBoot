@@ -116,15 +116,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        if (UserStatus.LOCKED.equals(status)) {
-            try {
-                throw new ValidationException("lockedAccount", "Tài khoản của bạn đã bị khóa!");
-            } catch (ValidationException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return true;
-        }
+        return true;
     }
 
     @Override

@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.dto.request.login_register.AuthenticationRequest;
 import vn.eledevo.vksbe.dto.request.login_register.RegisterRequest;
 import vn.eledevo.vksbe.dto.response.AuthenticationResponse;
+import vn.eledevo.vksbe.exception.ValidationException;
 import vn.eledevo.vksbe.service.authenticate.AuthenticationService;
 import vn.eledevo.vksbe.service.user.UserService;
 
@@ -32,7 +33,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request)
+            throws ValidationException {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
