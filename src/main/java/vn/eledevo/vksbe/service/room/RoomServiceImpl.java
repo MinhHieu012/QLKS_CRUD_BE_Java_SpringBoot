@@ -38,7 +38,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomResponse> getAllRoom() {
-        List<Room> roomListFromDB = repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt", "updatedAt"));
+        List<Room> roomListFromDB = repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         List<RoomResponse> roomListUserReceived =
                 roomListFromDB.stream().map(mapper::toResponse).collect(Collectors.toList());
         return roomListUserReceived;

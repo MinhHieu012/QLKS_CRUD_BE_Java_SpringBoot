@@ -42,7 +42,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponse> getAllBookings() {
-        List<Booking> bookingListFromDB = bookingRepository.findAll();
+        List<Booking> bookingListFromDB = bookingRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         List<BookingResponse> bookingListToFE =
                 bookingListFromDB.stream().map(mapper::toResponse).toList();
         return bookingListToFE;

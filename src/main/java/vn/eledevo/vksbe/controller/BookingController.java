@@ -61,10 +61,10 @@ public class BookingController {
 
     @GetMapping("/filter")
     public ApiResponse sortAndPagingAndSearch(
-            @RequestParam(value = "orderBy", defaultValue = "ASC") String orderBy,
+            @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "limit", defaultValue = "2") int limit,
-            @RequestParam(value = "orderedColumn", defaultValue = "id") String orderedColumn,
+            @RequestParam(value = "orderedColumn", defaultValue = "createdAt") String orderedColumn,
             @Nullable @RequestParam("bookingId") Long bookingId,
             @Nullable @RequestParam("roomName") String roomName,
             @Nullable @RequestParam("userName") String userName,

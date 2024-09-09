@@ -36,7 +36,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Override
     public List<RoomTypeResponse> getAllRoomType() {
-        List<RoomType> roomTypeListFromDB = repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt", "updatedAt"));
+        List<RoomType> roomTypeListFromDB = repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         List<RoomTypeResponse> roomTypeList =
                 roomTypeListFromDB.stream().map(mapper::toResponse).toList();
         return roomTypeList;
