@@ -25,20 +25,20 @@ public class RoomController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse addRoom(@RequestBody RoomRequest roomRequest) throws ValidationException {
         return new ApiResponse<>(201, "Add room success!", service.addRoom(roomRequest));
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse updateRoom(@PathVariable Integer id, @RequestBody @Valid RoomRequest roomRequest)
             throws ValidationException {
         return new ApiResponse<>(204, "Update room success!", service.updateRoom(id, roomRequest));
     }
 
     @PutMapping("/roomstatus/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse updateRoomStatus(@PathVariable Integer id, @RequestParam String status)
             throws ValidationException {
         return new ApiResponse<>(204, "Update room status success!", service.updateRoomStatus(id, status));

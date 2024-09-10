@@ -33,13 +33,13 @@ public class BookingController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse addBooking(@RequestBody BookingRequest bookingRequest) throws ValidationException {
         return new ApiResponse<>(201, "Create booking success!", bookingService.addBooking(bookingRequest));
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse updateBooking(@PathVariable Long id, @RequestBody BookingUpdateRequest bookingUpdateRequest)
             throws ValidationException {
         return new ApiResponse<>(
@@ -47,13 +47,13 @@ public class BookingController {
     }
 
     @PatchMapping("/cancel/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse cancelBooking(@PathVariable Long id) throws ValidationException {
         return new ApiResponse<>(204, "Cancel booking success!", bookingService.cancelBooking(id));
     }
 
     @PutMapping("/bookingstatus/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse updateBookingStatus(@PathVariable Long id, @RequestParam String status)
             throws ValidationException {
         return new ApiResponse<>(204, "Update booking status success!", bookingService.updateBookingStatus(id, status));

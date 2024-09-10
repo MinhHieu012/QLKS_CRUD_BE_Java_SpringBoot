@@ -24,20 +24,20 @@ public class RoomTypeController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse addRoomType(@RequestBody RoomTypeRequest roomTypeRequest) throws ValidationException {
         return new ApiResponse<>(200, "Add room type success!", service.addRoomType(roomTypeRequest));
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse updateRoomType(@PathVariable Long id, @RequestBody RoomTypeRequest roomTypeRequest)
             throws ValidationException {
         return new ApiResponse<>(200, "Update room type success!", service.updateRoomType(id, roomTypeRequest));
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse deleteRoomType(@PathVariable Long id) throws ValidationException {
         return new ApiResponse<>(200, "Delete room type success!", service.deleteRoomType(id));
     }
