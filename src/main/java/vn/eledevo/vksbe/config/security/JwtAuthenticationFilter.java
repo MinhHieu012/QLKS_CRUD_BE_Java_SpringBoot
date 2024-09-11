@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import lombok.RequiredArgsConstructor;
+import vn.eledevo.vksbe.exception.ValidationException;
 import vn.eledevo.vksbe.repository.TokenRepository;
 
 @Component
@@ -25,7 +26,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
-
     /**
      * Bộ lọc xác thực JWT cho mỗi yêu cầu đến ứng dụng.
      *
@@ -51,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization"); // Lấy ra header từ request
         final String jwt;
         final String userEmail;
+        final String userRole;
 
         // Kiểm tra xem header có null hoặc bắt đầu bằng chuỗi Bearer không
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -61,6 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Nếu header tồn tại và đúng định dạng sẽ bỏ qua 7 ký tự đầu tiên
         jwt = authHeader.substring(7); // Cắt chuỗi header từ ký tự index số 7 trở đi ( "Bearer " )
         userEmail = jwtService.extractUsername(jwt); // Lấy ra userEmail từ token
+
+        userRole = jwtService.extractRole(jwt);
 
         // Kiểm tra chuỗi vừa lấy ra có bị null hoặc trong ContextHolder có bị null
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -124,5 +127,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    public String getJwtFromHeader(@NonNull HttpServletRequest request) throws ValidationException {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.replace("Bearer ", "");
+        }
+        else {
+            throw new ValidationException("tokenIsNull", "Bạn không có quyền thao tác!");
+        }
     }
 }

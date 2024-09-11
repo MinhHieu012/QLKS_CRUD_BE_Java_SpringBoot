@@ -91,6 +91,10 @@ public class AuthenticationService {
             throw new ValidationException("lockedAccount", "Tài khoản của bạn đã bị khóa!");
         }
 
+        if (user.getRole() == Role.USER) {
+            throw new ValidationException("invalidRoleAccess", "Bạn không có quyền truy cập");
+        }
+
         // Xác thực thông tin đăng nhập của người dùng
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));

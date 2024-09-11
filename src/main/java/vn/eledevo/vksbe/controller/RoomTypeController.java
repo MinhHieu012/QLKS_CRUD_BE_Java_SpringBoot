@@ -19,6 +19,7 @@ public class RoomTypeController {
     private final RoomTypeService service;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse getAllRoomType() {
         return new ApiResponse<>(200, "Get all room type success!", service.getAllRoomType());
     }
@@ -43,6 +44,7 @@ public class RoomTypeController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse filterRoomType(
             @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,

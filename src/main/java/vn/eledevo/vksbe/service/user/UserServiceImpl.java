@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import vn.eledevo.vksbe.config.security.JwtAuthenticationFilter;
+import vn.eledevo.vksbe.config.security.JwtService;
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
@@ -37,6 +40,10 @@ public class UserServiceImpl implements UserService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     UserMapper mapper;
+
+    JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    JwtService jwtService;
 
     @Override
     public List<UserResponse> getAllUser() {
@@ -149,8 +156,13 @@ public class UserServiceImpl implements UserService {
             String orderedColumn,
             String name,
             String phone,
-            String identificationNumber)
+            String identificationNumber,
+            HttpServletRequest request)
             throws ValidationException {
+
+        var userRoleToCheck = jwtService.extractRole(jwtAuthenticationFilter.getJwtFromHeader(request));
+        System.out.println("User đang login có role là: " + userRoleToCheck.toUpperCase());
+
         Pageable userPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 

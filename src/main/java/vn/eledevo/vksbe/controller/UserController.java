@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.annotation.Nullable;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,12 +72,12 @@ public class UserController {
             @RequestParam(value = "orderedColumn", defaultValue = "createdAt") String orderedColumn,
             @Nullable @RequestParam("username") String username,
             @Nullable @RequestParam("phone") String phone,
-            @Nullable @RequestParam("identificationNumber") String identificationNumber)
+            @Nullable @RequestParam("identificationNumber") String identificationNumber, HttpServletRequest request)
             throws ValidationException {
         return new ApiResponse<>(
                 200,
                 "Success!",
                 userService.sortAndPagingAndSearch(
-                        orderBy, page, limit, orderedColumn, username, phone, identificationNumber));
+                        orderBy, page, limit, orderedColumn, username, phone, identificationNumber, request));
     }
 }

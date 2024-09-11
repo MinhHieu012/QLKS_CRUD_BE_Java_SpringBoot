@@ -20,6 +20,7 @@ public class RoomController {
     private final RoomService service;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse getAllRoom() {
         return new ApiResponse<>(200, "Get all room success!", service.getAllRoom());
     }
@@ -45,6 +46,7 @@ public class RoomController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse sortAndPagingAndSearch(
             @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,

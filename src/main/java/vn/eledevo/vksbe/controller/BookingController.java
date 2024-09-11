@@ -23,11 +23,13 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse getAllBookings() {
         return new ApiResponse<>(200, "Get all booking success!", bookingService.getAllBookings());
     }
 
     @GetMapping("/lich/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse getBookingById(@PathVariable Long id) {
         return new ApiResponse<>(200, "Get booking success!", bookingService.getBookingById(id));
     }
@@ -60,6 +62,7 @@ public class BookingController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ApiResponse sortAndPagingAndSearch(
             @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,

@@ -3,6 +3,7 @@ package vn.eledevo.vksbe.service.user;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
@@ -30,6 +31,7 @@ public interface UserService {
             String orderedColumn,
             String name,
             String phone,
-            String identificationNumber)
+            String identificationNumber,
+            HttpServletRequest request)
             throws ValidationException;
 }
