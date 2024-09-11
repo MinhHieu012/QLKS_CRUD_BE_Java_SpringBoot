@@ -51,6 +51,16 @@ public class JwtService {
     }
 
     /**
+     * Trích xuất quyền người dùng (role) từ JWT token.
+     *
+     * @param token JWT token
+     * @return Role của người dùng
+     */
+    public String extractRole(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    /**
      * Trích xuất một claim cụ thể từ JWT token.
      *
      * @param token          JWT token
