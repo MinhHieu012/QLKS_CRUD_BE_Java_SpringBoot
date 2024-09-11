@@ -160,15 +160,23 @@ public class UserServiceImpl implements UserService {
             HttpServletRequest request)
             throws ValidationException {
 
-        var userRoleToCheck = jwtService.extractRole(jwtAuthenticationFilter.getJwtFromHeader(request));
-        System.out.println("User đang login có role là: " + userRoleToCheck.toUpperCase());
-
         Pageable userPageable =
                 PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
 
-        Page<User> userList =
-                userRepository.listUserSearchedAndPagingFromDB(name, phone, identificationNumber, userPageable);
+        var token = jwtAuthenticationFilter.getJwtFromHeader(request);
 
-        return userList.map(mapper::toResponse);
+        if (token.isEmpty()) {
+            throw new ValidationException("tokenIsNull", "Bạn không có quyền thao tác!");
+        } else {
+            var userRoleToExtract = jwtService.extractRole(token);
+            var userRoleFinal = userRoleToExtract.toUpperCase();
+            Page<User> userList;
+            if (userRoleFinal.equals("ADMIN")) {
+                userList = userRepository.listUserSearchedAndPagingFromDBForRoleAdmin(name, phone, identificationNumber, userPageable);
+            } else {
+                userList = userRepository.listUserSearchedAndPagingFromDBForRoleManager(name, phone, identificationNumber, userPageable);
+            }
+            return userList.map(mapper::toResponse);
+        }
     }
 }

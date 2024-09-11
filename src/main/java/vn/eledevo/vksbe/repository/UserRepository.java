@@ -37,7 +37,18 @@ public interface UserRepository extends BaseRepository<User, UUID> {
     @Query("SELECT u FROM User u " + "WHERE (:username IS NULL OR u.username LIKE %:username%) "
             + "AND (:phone IS NULL OR u.phone LIKE %:phone%) "
             + "AND (:identificationNumber IS NULL OR u.identificationNumber LIKE %:identificationNumber%) ")
-    Page<User> listUserSearchedAndPagingFromDB(
+    Page<User> listUserSearchedAndPagingFromDBForRoleAdmin(
+            @Param("username") String username,
+            @Param("phone") String phone,
+            @Param("identificationNumber") String identificationNumber,
+            Pageable pageable);
+
+    @Query("SELECT u FROM User u "
+            + "WHERE u.role NOT IN ('ADMIN') "
+            + "AND (:username IS NULL OR u.username LIKE %:username%) "
+            + "AND (:phone IS NULL OR u.phone LIKE %:phone%) "
+            + "AND (:identificationNumber IS NULL OR u.identificationNumber LIKE %:identificationNumber%) ")
+    Page<User> listUserSearchedAndPagingFromDBForRoleManager(
             @Param("username") String username,
             @Param("phone") String phone,
             @Param("identificationNumber") String identificationNumber,
