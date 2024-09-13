@@ -104,18 +104,15 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    // Cấu hình CORS cho phép từ http://localhost:4200
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:4200"); // Cấu hình nguồn gốc (Origin) được phép
+        configuration.addAllowedOriginPattern("*"); // Cấu hình nguồn gốc (Origin) được phép
         configuration.addAllowedMethod("*"); // Cho phép tất cả các phương thức HTTP
         configuration.addAllowedHeader("*"); // Cho phép tất cả các header
         configuration.setAllowCredentials(true); // Cho phép gửi cookie hoặc các thông tin đăng nhập
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // Áp dụng cấu hình này cho tất cả các URL
-
         return source;
     }
 
