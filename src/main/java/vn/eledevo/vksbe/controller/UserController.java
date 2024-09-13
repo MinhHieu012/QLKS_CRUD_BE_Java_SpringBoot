@@ -72,7 +72,8 @@ public class UserController {
             @RequestParam(value = "orderedColumn", defaultValue = "createdAt") String orderedColumn,
             @Nullable @RequestParam("username") String username,
             @Nullable @RequestParam("phone") String phone,
-            @Nullable @RequestParam("identificationNumber") String identificationNumber, HttpServletRequest request)
+            @Nullable @RequestParam("identificationNumber") String identificationNumber,
+            HttpServletRequest request)
             throws ValidationException {
         return new ApiResponse<>(
                 200,

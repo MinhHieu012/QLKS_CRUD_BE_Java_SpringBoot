@@ -7,6 +7,7 @@ import static vn.eledevo.vksbe.constant.ErrorCode.METHOD_ERROR;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -121,5 +122,10 @@ public class GlobalExceptionHandler extends Throwable {
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<String> handleAccessDenied(AuthorizationDeniedException ex) {
         return new ResponseEntity<>("Bạn không có quyền!", HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Thông tin đăng nhập không đúng!");
     }
 }

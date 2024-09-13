@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -172,9 +173,11 @@ public class UserServiceImpl implements UserService {
             var userRoleFinal = userRoleToExtract.toUpperCase();
             Page<User> userList;
             if (userRoleFinal.equals("ADMIN")) {
-                userList = userRepository.listUserSearchedAndPagingFromDBForRoleAdmin(name, phone, identificationNumber, userPageable);
+                userList = userRepository.listUserSearchedAndPagingFromDBForRoleAdmin(
+                        name, phone, identificationNumber, userPageable);
             } else {
-                userList = userRepository.listUserSearchedAndPagingFromDBForRoleManager(name, phone, identificationNumber, userPageable);
+                userList = userRepository.listUserSearchedAndPagingFromDBForRoleManager(
+                        name, phone, identificationNumber, userPageable);
             }
             return userList.map(mapper::toResponse);
         }

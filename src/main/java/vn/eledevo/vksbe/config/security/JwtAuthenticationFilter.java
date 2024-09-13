@@ -133,8 +133,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.replace("Bearer ", "");
-        }
-        else {
+        } else {
             throw new ValidationException("tokenIsNull", "Bạn không có quyền thao tác!");
         }
     }

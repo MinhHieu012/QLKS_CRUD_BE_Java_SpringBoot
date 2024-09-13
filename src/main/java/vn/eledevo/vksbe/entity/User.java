@@ -20,7 +20,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
-import vn.eledevo.vksbe.exception.ValidationException;
 
 @Entity
 @Getter
