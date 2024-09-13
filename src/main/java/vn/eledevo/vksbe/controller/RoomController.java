@@ -15,27 +15,23 @@ import vn.eledevo.vksbe.service.room.RoomService;
 @RestController
 @RequestMapping("/admin/quanlyphong")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class RoomController {
     private final RoomService service;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse getAllRoom() {
         return new ApiResponse<>(200, "Get all room success!", service.getAllRoom());
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse addRoom(@RequestBody RoomRequest roomRequest) throws ValidationException {
         return new ApiResponse<>(201, "Add room success!", service.addRoom(roomRequest));
     }
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse updateRoom(@PathVariable Integer id, @RequestBody @Valid RoomRequest roomRequest)
             throws ValidationException {
         return new ApiResponse<>(204, "Update room success!", service.updateRoom(id, roomRequest));
@@ -43,7 +39,6 @@ public class RoomController {
 
     @PutMapping("/roomstatus/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse updateRoomStatus(@PathVariable Integer id, @RequestParam String status)
             throws ValidationException {
         return new ApiResponse<>(204, "Update room status success!", service.updateRoomStatus(id, status));
@@ -51,7 +46,6 @@ public class RoomController {
 
     @GetMapping("/filter")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse sortAndPagingAndSearch(
             @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,

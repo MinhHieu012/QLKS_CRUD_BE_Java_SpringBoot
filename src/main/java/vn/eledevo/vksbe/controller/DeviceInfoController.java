@@ -14,12 +14,10 @@ import vn.eledevo.vksbe.service.device_info.DeviceInfoService;
 @RestController
 @RequestMapping("/api/v1/public/device-info")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class DeviceInfoController {
     private final DeviceInfoService deviceInfoService;
 
     @PostMapping("")
-    @CrossOrigin(origins = "*")
     public ApiResponse<DeviceInfoResponse> createUser(@RequestBody @Valid DeviceInfoRequest deviceInfoRequest)
             throws ValidationException {
         return ApiResponse.ok(deviceInfoService.createDevice(deviceInfoRequest));

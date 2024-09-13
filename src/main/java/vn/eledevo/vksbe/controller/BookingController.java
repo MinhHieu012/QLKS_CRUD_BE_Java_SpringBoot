@@ -18,35 +18,30 @@ import vn.eledevo.vksbe.service.booking.BookingService;
 @RestController
 @RequestMapping("/admin/quanlydatphong")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class BookingController {
 
     private final BookingService bookingService;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse getAllBookings() {
         return new ApiResponse<>(200, "Get all booking success!", bookingService.getAllBookings());
     }
 
     @GetMapping("/lich/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse getBookingById(@PathVariable Long id) {
         return new ApiResponse<>(200, "Get booking success!", bookingService.getBookingById(id));
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse addBooking(@RequestBody BookingRequest bookingRequest) throws ValidationException {
         return new ApiResponse<>(201, "Create booking success!", bookingService.addBooking(bookingRequest));
     }
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse updateBooking(@PathVariable Long id, @RequestBody BookingUpdateRequest bookingUpdateRequest)
             throws ValidationException {
         return new ApiResponse<>(
@@ -55,14 +50,12 @@ public class BookingController {
 
     @PatchMapping("/cancel/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse cancelBooking(@PathVariable Long id) throws ValidationException {
         return new ApiResponse<>(204, "Cancel booking success!", bookingService.cancelBooking(id));
     }
 
     @PutMapping("/bookingstatus/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse updateBookingStatus(@PathVariable Long id, @RequestParam String status)
             throws ValidationException {
         return new ApiResponse<>(204, "Update booking status success!", bookingService.updateBookingStatus(id, status));
@@ -70,7 +63,6 @@ public class BookingController {
 
     @GetMapping("/filter")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @CrossOrigin(origins = "*")
     public ApiResponse sortAndPagingAndSearch(
             @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
             @RequestParam(value = "page", defaultValue = "1") int page,
