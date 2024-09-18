@@ -44,7 +44,7 @@ public class User implements UserDetails {
     String password;
 
     @Column(name = "date_of_birth")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy/MM/dd")
     Date dateOfBirth;
 
     @Column(name = "identification_number", unique = true)

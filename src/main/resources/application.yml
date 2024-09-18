@@ -1,3 +1,4 @@
+# ENV: NON-DOCKER (LOCALHOST)
 spring:
   datasource:
     username: root

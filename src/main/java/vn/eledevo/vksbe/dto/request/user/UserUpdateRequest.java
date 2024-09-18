@@ -30,6 +30,6 @@ public class UserUpdateRequest {
 
     String identificationNumber;
 
-    @JsonFormat(pattern = "yyyy/MM/dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date dateOfBirth;
 }
