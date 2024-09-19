@@ -60,6 +60,7 @@ public class UserServiceTest {
                 .build();
 
         userResponse = UserResponse.builder()
+                .id(UUID.fromString("7f7ee124-1174-4b8b-9540-ed2a39263bf3"))
                 .username("guest")
                 .email("guest@gmail.com")
                 .dateOfBirth(dateOfBirth)
@@ -68,6 +69,7 @@ public class UserServiceTest {
                 .build();
 
         user = User.builder()
+                .id(UUID.fromString("7f7ee124-1174-4b8b-9540-ed2a39263bf3"))
                 .username("guest")
                 .email("guest@gmail.com")
                 .phone("0967710509")

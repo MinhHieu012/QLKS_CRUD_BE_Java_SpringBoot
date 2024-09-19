@@ -100,7 +100,8 @@ public class TestUserController {
                 .status(UserStatus.ACTIVE)
                 .build();
 
-        apiResponse = ApiResponse.builder().code(201).message("Create user success!").build();
+        apiResponse =
+                ApiResponse.builder().code(201).message("Create user success!").build();
     }
 
     @Test
@@ -124,7 +125,9 @@ public class TestUserController {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(
+            username = "admin",
+            roles = {"ADMIN"})
     void addUser_validRequest_success() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userRequest);
@@ -144,7 +147,9 @@ public class TestUserController {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(
+            username = "admin",
+            roles = {"ADMIN"})
     void lockUser_invalidRequestMissingParams_failed() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/quanlyuser/lock")
                         .contentType(MediaType.APPLICATION_JSON)
