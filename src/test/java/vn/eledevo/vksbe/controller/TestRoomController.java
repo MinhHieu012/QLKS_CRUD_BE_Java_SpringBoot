@@ -73,7 +73,7 @@ public class TestRoomController {
     }
 
     @Test
-    void getAllUsers_ReturnsListOfUsers() throws Exception {
+    void GetAllUsers_ReturnsListOfUsers_Success() throws Exception {
 
         Mockito.when(roomService.getAllRoom()).thenReturn(roomList);
 

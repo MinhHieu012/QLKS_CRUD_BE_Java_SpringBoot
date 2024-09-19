@@ -1,16 +1,15 @@
 package vn.eledevo.vksbe.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static vn.eledevo.vksbe.constant.ResponseMessage.USER_EXIST;
+import static org.mockito.ArgumentMatchers.*;
 
 import java.util.Date;
-import java.util.UUID;
 
+import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.TestPropertySource;
 
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
@@ -33,6 +33,9 @@ import vn.eledevo.vksbe.service.user.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Log4j2
+@TestPropertySource("/test.properties")
+@WithUserDetails(value = "admin", userDetailsServiceBeanName = "testUserAdmin")
 public class UserServiceTest {
     @Autowired
     private UserService userService;
@@ -79,7 +82,7 @@ public class UserServiceTest {
     @TestConfiguration
     static class TestConfig {
         @Bean
-        public UserDetailsService testUserDetailsService() {
+        public UserDetailsService testUserAdmin() {
             User userMock = new User();
             userMock.setRole(Role.ADMIN);
             return username -> userMock;
@@ -87,8 +90,7 @@ public class UserServiceTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "testUserDetailsService")
-    void addUser_validRequest_success() throws ValidationException {
+    void AddUser_ValidRequest_Success() throws ValidationException {
         Mockito.when(userRepository.existsByUsername(any())).thenReturn(false);
         Mockito.when(userRepository.existsByPhone(any())).thenReturn(false);
         Mockito.when(userRepository.existsByEmail(any())).thenReturn(false);
@@ -109,13 +111,50 @@ public class UserServiceTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "testUserDetailsService")
-    void addUser_invalidRequest_UsernameExisted_failed() throws ValidationException {
+    void AddUser_InvalidRequest_UsernameExisted_Failed() throws ValidationException {
         Mockito.when(userRepository.existsByUsername(anyString())).thenReturn(true);
 
-        var exceptionUsernameExisted =
+        userRequest.setUsername("khach 1");
+
+        var exceptionUsernameExisted = assertThrows(ValidationException.class, () -> userService.createUser(userRequest));
+
+        Assertions.assertThat(exceptionUsernameExisted.getMessage()).isEqualTo("username: " + "Người dùng đã tồn tại!");
+    }
+
+    @Test
+    void AddUser_InvalidRequest_PhoneExisted_Failed() throws ValidationException {
+        Mockito.when(userRepository.existsByPhone(anyString())).thenReturn(true);
+
+        userRequest.setPhone("0967710591");
+
+        var exceptionPhoneExisted = assertThrows(ValidationException.class, () -> userService.createUser(userRequest));
+
+        Assertions.assertThat(exceptionPhoneExisted.getMessage())
+                .isEqualTo("phone: " + "Số điện thoại này đã được sử dụng!");
+    }
+
+    @Test
+    void AddUser_InvalidRequest_EmailExisted_Failed() throws ValidationException {
+        Mockito.when(userRepository.existsByEmail(anyString())).thenReturn(true);
+
+        userRequest.setEmail("khach1@gmail.com");
+
+        var exceptionEmailExisted = assertThrows(ValidationException.class, () -> userService.createUser(userRequest));
+
+        Assertions.assertThat(exceptionEmailExisted.getMessage()).isEqualTo("email: " + "Email đã tồn tại!");
+    }
+
+    @Test
+    void AddUser_InvalidRequest_IdentificationNumberExisted_Failed() throws ValidationException {
+        Mockito.when(userRepository.existsByIdentificationNumber(ArgumentMatchers.any()))
+                .thenReturn(true);
+
+        userRequest.setIdentificationNumber("04734973");
+
+        var exceptionIdentificationNumberExisted =
                 assertThrows(ValidationException.class, () -> userService.createUser(userRequest));
 
-        Assertions.assertThat(exceptionUsernameExisted.getMessage()).isEqualTo("username: " + USER_EXIST);
+        Assertions.assertThat(exceptionIdentificationNumberExisted.getMessage())
+                .isEqualTo("identificationNumber: " + "Số CMND/CCCD không hợp lệ hoặc đã tồn tại!");
     }
 }

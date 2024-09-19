@@ -5,9 +5,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class VksBeApplicationTests {
-
     @Test
     void contextLoads() {
-        //        something test here
+        // Something test here
     }
 }
