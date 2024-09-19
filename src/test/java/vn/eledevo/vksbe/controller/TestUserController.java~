@@ -149,7 +149,7 @@ public class TestUserController {
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/quanlyuser/lock")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(500))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Internal Server Error"));
     }

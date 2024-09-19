@@ -27,3 +27,33 @@ application:
       expiration: 86400000
       refresh-token:
         expiration: 604800000
+
+# ENV: DOCKER (LOCALHOST + LINUX SERVER)
+#spring:
+#  datasource:
+#    username: hieu
+#    password:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://mysql-db:3306/crud_ks?createDatabaseIfNotExist=true
+#  jackson:
+#    default-property-inclusion: non_null
+#  mvc:
+#    log-resolved-exception: on
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    database: mysql
+#
+#application:
+#  security:
+#    jwt:
+#      secret-key: B3pSB4hhA4ApRtJQVv/FXoKwsCKZtNQ3CM81G0sPS0tQ+eLsW+6W/EZwE2oEahQK
+#      expiration: 86400000
+#      refresh-token:
+#        expiration: 604800000
