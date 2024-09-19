@@ -150,7 +150,7 @@ public class TestUserController {
     @WithMockUser(
             username = "admin",
             roles = {"ADMIN"})
-    void lockUser_invalidRequestMissingParams_failed() throws Exception {
+    void lockUser_invalidRequest_MissingParams_failed() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/quanlyuser/lock")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
