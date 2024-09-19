@@ -139,4 +139,14 @@ public class User implements UserDetails {
     void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    public User(
+            String uuid,
+            String username,
+            String email,
+            String dateOfBirth,
+            String phone,
+            String identificationNumber,
+            String role,
+            String status) {}
 }
