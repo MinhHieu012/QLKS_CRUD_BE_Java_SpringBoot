@@ -337,4 +337,54 @@ public class UserServiceTest {
         Assertions.assertThat(exceptionUserIsLocked.getMessage())
                 .isEqualTo("identificationNumber: " + "Số CMND/CCCD không hợp lệ hoặc đã tồn tại!");
     }
+
+    @Test
+    void LockUser_ValidRequest_Success() throws ValidationException {
+        Mockito.when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(existingUser));
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any())).thenReturn(existingUser);
+
+        existingUser.setStatus(UserStatus.LOCKED);
+
+        var resultUserLocked = userService.lockUser(existingUser.getId());
+
+        Assertions.assertThat(resultUserLocked.getId().toString()).isEqualTo("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0");
+        Assertions.assertThat(resultUserLocked.getStatus().toString()).isEqualTo("LOCKED");
+    }
+
+    @Test
+    void LockUser_InvalidRequest_UserIdNotExisted_Failed() throws ValidationException {
+        Mockito.when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
+
+        var exceptionUserIdNotExisted = assertThrows(
+                ValidationException.class,
+                () -> userService.lockUser(UUID.fromString("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0")));
+
+        Assertions.assertThat(exceptionUserIdNotExisted.getMessage()).isEqualTo("error: " + "User not found!");
+    }
+
+    @Test
+    void UnlockUser_ValidRequest_Success() throws ValidationException {
+        Mockito.when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(existingUser));
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any())).thenReturn(existingUser);
+
+        existingUser.setStatus(UserStatus.ACTIVE);
+
+        var resultUserUnlocked = userService.unLockUser(existingUser.getId());
+
+        Assertions.assertThat(resultUserUnlocked.getId().toString()).isEqualTo("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0");
+        Assertions.assertThat(resultUserUnlocked.getStatus().toString()).isEqualTo("ACTIVE");
+    }
+
+    @Test
+    void UnlockUser_InvalidRequest_UserIdNotExisted_Failed() throws ValidationException {
+        Mockito.when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
+
+        var exceptionUserIdNotExisted = assertThrows(
+                ValidationException.class,
+                () -> userService.unLockUser(UUID.fromString("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0")));
+
+        Assertions.assertThat(exceptionUserIdNotExisted.getMessage()).isEqualTo("Error: " + "User not found!");
+    }
 }

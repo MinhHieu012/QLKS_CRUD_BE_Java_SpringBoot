@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.util.Assert;
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
@@ -285,8 +286,7 @@ public class UserServiceTest {
                 () -> userService.updateUser(
                         UUID.fromString("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0"), userUpdateRequest));
 
-        Assertions.assertThat(exceptionUserIsLocked.getMessage())
-                .isEqualTo("username: " + "Người dùng đã tồn tại!");
+        Assertions.assertThat(exceptionUserIsLocked.getMessage()).isEqualTo("username: " + "Người dùng đã tồn tại!");
     }
 
     @Test
@@ -319,8 +319,7 @@ public class UserServiceTest {
                 () -> userService.updateUser(
                         UUID.fromString("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0"), userUpdateRequest));
 
-        Assertions.assertThat(exceptionUserIsLocked.getMessage())
-                .isEqualTo("email: " + "Email đã tồn tại!");
+        Assertions.assertThat(exceptionUserIsLocked.getMessage()).isEqualTo("email: " + "Email đã tồn tại!");
     }
 
     @Test
@@ -337,6 +336,56 @@ public class UserServiceTest {
                         UUID.fromString("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0"), userUpdateRequest));
 
         Assertions.assertThat(exceptionUserIsLocked.getMessage())
-                .isEqualTo("email: " + "Email đã tồn tại!");
+                .isEqualTo("identificationNumber: " + "Số CMND/CCCD không hợp lệ hoặc đã tồn tại!");
+    }
+
+    @Test
+    void LockUser_ValidRequest_Success() throws ValidationException {
+        Mockito.when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(existingUser));
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any())).thenReturn(existingUser);
+
+        existingUser.setStatus(UserStatus.LOCKED);
+
+        var resultUserLocked = userService.lockUser(existingUser.getId());
+
+        Assertions.assertThat(resultUserLocked.getId().toString()).isEqualTo("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0");
+        Assertions.assertThat(resultUserLocked.getStatus().toString()).isEqualTo("LOCKED");
+    }
+
+    @Test
+    void LockUser_InvalidRequest_UserIdNotExisted_Failed() throws ValidationException {
+        Mockito.when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
+
+        var exceptionUserIdNotExisted = assertThrows(
+                ValidationException.class,
+                () -> userService.lockUser(UUID.fromString("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0")));
+
+        Assertions.assertThat(exceptionUserIdNotExisted.getMessage()).isEqualTo("error: " + "User not found!");
+    }
+
+    @Test
+    void UnlockUser_ValidRequest_Success() throws ValidationException {
+        Mockito.when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(existingUser));
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any())).thenReturn(existingUser);
+
+        existingUser.setStatus(UserStatus.ACTIVE);
+
+        var resultUserUnlocked = userService.unLockUser(existingUser.getId());
+
+        Assertions.assertThat(resultUserUnlocked.getId().toString()).isEqualTo("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0");
+        Assertions.assertThat(resultUserUnlocked.getStatus().toString()).isEqualTo("ACTIVE");
+    }
+
+    @Test
+    void UnlockUser_InvalidRequest_UserIdNotExisted_Failed() throws ValidationException {
+        Mockito.when(userRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
+
+        var exceptionUserIdNotExisted = assertThrows(
+                ValidationException.class,
+                () -> userService.unLockUser(UUID.fromString("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0")));
+
+        Assertions.assertThat(exceptionUserIdNotExisted.getMessage()).isEqualTo("Error: " + "User not found");
     }
 }
