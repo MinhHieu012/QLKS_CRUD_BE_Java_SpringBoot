@@ -54,6 +54,15 @@ public class UserController {
         return new ApiResponse<>(200, "Unlock user success!", userService.unLockUser(uuid));
     }
 
+    @GetMapping("/search")
+    public ApiResponse searchUser(
+            @RequestParam("username") String username,
+            @RequestParam("phone") String phone,
+            @RequestParam("identificationNumber") String identificationNumber) {
+        return new ApiResponse<>(
+                200, "Search user success!", userService.searchUser(username, phone, identificationNumber));
+    }
+
     @GetMapping("/filter")
     public ApiResponse sortAndPagingAndSearch(
             @RequestParam(value = "orderBy", defaultValue = "DESC") String orderBy,
