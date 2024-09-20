@@ -23,8 +23,6 @@ public interface UserService {
 
     UserResponse unLockUser(UUID uuid) throws ValidationException;
 
-    List<UserResponse> searchUser(String name, String phone, String identificationNumber);
-
     Page<UserResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,

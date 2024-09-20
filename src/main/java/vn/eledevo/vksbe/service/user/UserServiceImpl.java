@@ -142,14 +142,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> searchUser(String username, String phone, String identificationNumber) {
-        List<User> listUserFromDB = userRepository.searchUsers(username, phone, identificationNumber);
-        List<UserResponse> listUserSearched =
-                listUserFromDB.stream().map(mapper::toResponse).collect(Collectors.toList());
-        return listUserSearched;
-    }
-
-    @Override
     public Page<UserResponse> sortAndPagingAndSearch(
             String orderBy,
             int page,

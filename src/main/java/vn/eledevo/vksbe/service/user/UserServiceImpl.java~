@@ -91,7 +91,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateUser(UUID uuid, UserUpdateRequest userRequest) throws ValidationException {
 
-        User user = userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
+        User user =
+                userRepository.findById(uuid).orElseThrow(() -> new ValidationException("Error", "User not found!"));
 
         if (user.getStatus() != UserStatus.ACTIVE) {
             throw new ValidationException("locked", "User đang bị khóa! Không thể cập nhật");
