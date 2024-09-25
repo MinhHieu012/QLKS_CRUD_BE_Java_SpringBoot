@@ -1,14 +1,18 @@
 package vn.eledevo.vksbe.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 
 import java.util.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -26,6 +30,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import lombok.extern.log4j.Log4j2;
+import vn.eledevo.vksbe.config.security.JwtAuthenticationFilter;
+import vn.eledevo.vksbe.config.security.JwtService;
 import vn.eledevo.vksbe.constant.Role;
 import vn.eledevo.vksbe.constant.UserStatus;
 import vn.eledevo.vksbe.dto.request.user.UserAddRequest;
@@ -33,6 +39,7 @@ import vn.eledevo.vksbe.dto.request.user.UserUpdateRequest;
 import vn.eledevo.vksbe.dto.response.user.UserResponse;
 import vn.eledevo.vksbe.entity.User;
 import vn.eledevo.vksbe.exception.ValidationException;
+import vn.eledevo.vksbe.mapper.UserMapper;
 import vn.eledevo.vksbe.repository.UserRepository;
 import vn.eledevo.vksbe.service.user.UserService;
 
@@ -58,6 +65,15 @@ public class UserServiceTest {
     private User user;
     private Date dateOfBirth;
     private List<User> userList;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @MockBean
+    private JwtService jwtService;
+    @MockBean
+    private UserMapper mapper;
+    @MockBean
+    private HttpServletRequest httpServletRequest;
 
     @BeforeEach
     void initData() {
@@ -386,5 +402,39 @@ public class UserServiceTest {
                 () -> userService.unLockUser(UUID.fromString("6fb9c7ec-a08f-44ca-8be3-25d6d50efef0")));
 
         Assertions.assertThat(exceptionUserIdNotExisted.getMessage()).isEqualTo("Error: " + "User not found!");
+    }
+
+    @Test
+    public void testSortAndPagingAndSearch_AdminRole() throws ValidationException {
+        // Arrange
+        String orderBy = "ASC";
+        int page = 1;
+        int limit = 5;
+        String orderedColumn = "username";
+        String name = "John";
+        String phone = "123456789";
+        String identificationNumber = "123456";
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcyNjYzNDg2MiwiZXhwIjoxNzI2NzIxMjYyfQ.KEgMO_xV8WRaZ9zgv-B7BiBUctqXnaJL5gSsBqfwOII";
+
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.valueOf(orderBy.toUpperCase()), orderedColumn));
+        User mockUser = new User();
+        Page<User> userPage = new PageImpl<>(Collections.singletonList(mockUser), pageable, 1);
+        UserResponse mockUserResponse = new UserResponse();
+
+        // Mock behaviors
+        Mockito.when(jwtAuthenticationFilter.getJwtFromHeader(httpServletRequest)).thenReturn(token);
+        Mockito.when(jwtService.extractRole(token)).thenReturn("ADMIN");
+        Mockito.when(userRepository.listUserSearchedAndPagingFromDBForRoleAdmin(name, phone, identificationNumber, pageable)).thenReturn(userPage);
+        Mockito.when(mapper.toResponse(mockUser)).thenReturn(mockUserResponse);
+
+        // Act
+        Page<UserResponse> result = userService.sortAndPagingAndSearch(orderBy, page, limit, orderedColumn, name, phone, identificationNumber, httpServletRequest);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        verify(jwtAuthenticationFilter).getJwtFromHeader(httpServletRequest);
+        verify(jwtService).extractRole(token);
+        verify(userRepository).listUserSearchedAndPagingFromDBForRoleAdmin(name, phone, identificationNumber, pageable);
     }
 }
